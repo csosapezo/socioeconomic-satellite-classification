@@ -13,7 +13,9 @@ def load_model(model_path, model_class):
     :param model_class: PyTorch model class
     :type model_class: torch.nn.Module
 
+
     :return: pretrained model
+    :rtype: torch.nn.Module
     """
 
     model = model_class()
@@ -33,7 +35,9 @@ def run_model(input_layer, model):
     :param model: PyTorch model
     :type model: torch.nn.Module
 
+
     :return: model output
+    :rtype: torch.autograd.Variable
     """
 
     model.eval()
