@@ -1,36 +1,36 @@
 import os
+from itertools import product
 
 import fiona
 import matplotlib.pyplot as plt
 import numpy as np
 import rasterio
+from rasterio import windows
 
 from rasterio.features import geometry_mask
 
+import utils
 
-def convert_geojson_to_numpy_array_mask(geojson_path, image_path):
+
+def convert_geojson_to_numpy_array_mask(geojson_path, image_shape, image_transform):
     """
     Create a mask from a geoJSON file object.
 
     :param geojson_path: mask geoJSON path
     :type geojson_path: str
 
-    :param image_path: satellite image path
-    :type image_path: str
+    :param image_shape: image height and width
+    :type image_shape: (int, int)
 
+    :param image_transform: Affine transform
 
-    :return: mask generated from geoJSON file
-    :rtype: np.ndarray
+    :return: generated mask
     """
-
-    with rasterio.open(image_path) as dataset:
-        shape = (dataset.height, dataset.width)
-        transform = dataset.transform
 
     with fiona.open(geojson_path) as f:
         geojson = [roof_data['geometry'] for roof_data in f]
 
-    return geometry_mask(geojson, shape, transform, all_touched=True, invert=True)
+    return geometry_mask(geojson, image_shape, image_transform, all_touched=True, invert=True)
 
 
 def plot_mask(mask):
@@ -45,44 +45,69 @@ def plot_mask(mask):
     plt.show()
 
 
-def generate_masks(image_directory_path, geojson_directory_path,
-                   image_names, geojson_names, output_path):
+def get_tiles(dataset, width=utils.constants.width, height=utils.constants.height):
     """
-    Create and save masks from geoJSON files
-
-    :param image_directory_path: path in which satellite images are located
-    :type image_directory_path: str
-
-    :param geojson_directory_path: path in which geojson files are located
-    :type geojson_directory_path: str
-
-    :param image_names: images names list
-    :type image_names: list[str]
-
-    :param geojson_names: geojson files names list
-    :type geojson_names: list[str]
-
-    :param output_path: path in which mask are saved
-    :type output_path: str
-
-
-    :return: a list containing mask names
-    :rtype: list[str]
+    Implementation from https://github.com/jesseniagonzalezv/App_segmentation_water_bodies
+    :param dataset: data reader
+    :param width: patch expected width
+    :param height: patch expected height
+    :return: crop windows and Affine transform
     """
+    nols, nrows = dataset.meta['width'], dataset.meta['height']
+    offsets = product(range(0, nols, width), range(0, nrows, height))
+    big_window = windows.Window(col_off=0, row_off=0, width=nols, height=nrows)
+    for col_off, row_off in offsets:
+        window = windows.Window(col_off=col_off, row_off=row_off, width=width, height=height).intersection(big_window)
+        transform = windows.transform(window, dataset.transform)
+        yield window, transform
 
-    if not os.path.exists(output_path):
-        os.mkdir(output_path)
 
-    mask_names = []
+def split_images_and_generate_masks(image_directory_path, geojson_directory_path, image_names,
+                                    geojson_names, output_path):
+    """
+        Create and save masks from geoJSON files.
+        Implementation adapted from https://github.com/jesseniagonzalezv/App_segmentation_water_bodies
+
+        :param image_directory_path: path in which satellite images are located
+        :type image_directory_path: str
+
+        :param geojson_directory_path: path in which geojson files are located
+        :type geojson_directory_path: str
+
+        :param image_names: images names list
+        :type image_names: list[str]
+
+        :param geojson_names: geojson files names list
+        :type geojson_names: list[str]
+
+        :param output_path: path in which mask are saved
+        :type output_path: str
+        """
 
     for idx in range(len(image_names)):
-        mask = convert_geojson_to_numpy_array_mask(str(os.path.join(geojson_directory_path, geojson_names[idx])),
-                                                   str(os.path.join(image_directory_path, image_names[idx])))
+        geojson_filepath = os.path.join(geojson_directory_path, geojson_names[idx])
+        image_filepath = os.path.join(image_directory_path, image_names[idx])
 
         dot = image_names[idx].rfind(".") - 1
-        name = image_names[idx][:dot] + ".npy"
-        mask_names.append(name)
+        output_filename = image_names[idx][:dot] + "_subtile_{}-{}.tif"
 
-        np.save(str(os.path.join(output_path, "labels", name)), mask)
+        with rasterio.open(image_filepath) as dataset:
 
-    return mask_names
+            meta = dataset.meta.copy()
+
+            for window, transform in get_tiles(dataset):
+                meta['transform'] = transform
+                meta['width'], meta['height'] = window.width, window.height
+
+                output_name = output_filename.format(int(window.col_off), int(window.row_off))
+                patch_output_filepath = os.path.join(output_path, "split", output_name)
+
+                mask = convert_geojson_to_numpy_array_mask(geojson_filepath, (window.width, window.height),
+                                                           transform)
+                dot = output_name.rfind(".") - 1
+                name = output_name[:dot] + ".npy"
+                np.save(str(os.path.join(output_path, "labels", name)), mask)
+
+                if (int(window.width) == utils.constants.width) and (int(window.height) == utils.constants.height):
+                    with rasterio.open(patch_output_filepath, 'w', **meta) as outds:
+                        outds.write(dataset.read(window=window))
