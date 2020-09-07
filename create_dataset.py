@@ -32,7 +32,6 @@ def main():
 
     # List file names for rasters and geoJSOM label data
     image_file_names = os.listdir(args.images_path)
-    print(image_file_names)
     geojson_file_names = os.listdir(args.geojson_path)
 
     if args.limit > 0:
@@ -41,3 +40,7 @@ def main():
 
     utils.split_images_and_generate_masks(args.images_path, args.geojson_path,
                                           image_file_names, geojson_file_names, args.data_path)
+
+
+if __name__ == "__main__":
+    main()
