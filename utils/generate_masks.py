@@ -30,6 +30,9 @@ def convert_geojson_to_numpy_array_mask(geojson_path, image_shape, image_transfo
     with fiona.open(geojson_path) as f:
         geojson = [roof_data['geometry'] for roof_data in f]
 
+    if not geojson:
+        return np.zeros(image_shape)
+
     return geometry_mask(geojson, image_shape, image_transform, all_touched=True, invert=True)
 
 
