@@ -108,6 +108,6 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
                 name = output_name[:dot] + ".npy"
                 np.save(str(os.path.join(output_path, "labels", name)), mask)
 
-                if (int(window.width) == utils.constants.width) and (int(window.height) == utils.constants.height):
-                    with rasterio.open(patch_output_filepath, 'w', **meta) as outds:
-                        outds.write(dataset.read(window=window))
+                with rasterio.open(patch_output_filepath, 'w', **meta) as outds:
+                    outds.write(dataset.read(window=window))
+

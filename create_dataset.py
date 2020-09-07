@@ -14,11 +14,11 @@ def main():
     # Argument parsing
     parser = argparse.ArgumentParser()
     arg = parser.add_argument
-    arg('--images-path', type=str, default='data/train/AOI_11_Rotterdam/PS-RGBNIR/',
+    arg('--images-path', type=str, default='./data/train/AOI_11_Rotterdam/PS-RGBNIR/',
         help='path in which the satellite images are located')
-    arg('--geojson-path', type=str, default='data/train/AOI_11_Rotterdam/geojson_buildings/',
+    arg('--geojson-path', type=str, default='./data/train/AOI_11_Rotterdam/geojson_buildings/',
         help='path in which geoJSON labels are located')
-    arg('--data-path', type=str, default='data/train/',
+    arg('--data-path', type=str, default='./data/train/',
         help='path in which numpy arrays (images and mask) are stored as numPy arrays')
     arg('--geojson-name', type=str, default='SN6_Train_AOI_11_Rotterdam_Buildings_',
         help='geojson file name format')
