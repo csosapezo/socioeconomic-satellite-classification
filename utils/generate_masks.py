@@ -88,7 +88,13 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
         geojson_filepath = os.path.join(geojson_directory_path, geojson_names[idx])
         image_filepath = os.path.join(image_directory_path, image_names[idx])
 
-        dot = image_names[idx].rfind(".") - 1
+        if not os.path.exists(os.path.join(output_path, "labels")):
+            os.mkdir(os.path.join(output_path, "labels"))
+
+        if not os.path.exists(os.path.join(output_path, "split")):
+            os.mkdir(os.path.join(output_path, "split"))
+
+        dot = image_names[idx].rfind(".")
         output_filename = image_names[idx][:dot] + "_subtile_{}-{}.tif"
 
         with rasterio.open(image_filepath) as dataset:
@@ -104,9 +110,10 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
 
                 mask = convert_geojson_to_numpy_array_mask(geojson_filepath, (window.width, window.height),
                                                            transform)
-                dot = output_name.rfind(".") - 1
+                dot = output_name.rfind(".")
                 name = output_name[:dot] + ".npy"
                 print("Saved label: {}".format(os.path.join(output_path, "labels", name)))
+
                 np.save(str(os.path.join(output_path, "labels", name)), mask)
 
                 with rasterio.open(patch_output_filepath, 'w', **meta) as outds:
