@@ -34,5 +34,9 @@ def main():
     image_file_names = os.listdir(args.images_path)
     geojson_file_names = os.listdir(args.geojson_path)
 
+    if args.limit > 0:
+        image_file_names = image_file_names[:args.limit]
+        geojson_file_names = geojson_file_names[:args.limit]
+
     utils.split_images_and_generate_masks(args.images_path, args.geojson_path,
                                           image_file_names, geojson_file_names, args.data_path)
