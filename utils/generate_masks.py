@@ -9,7 +9,7 @@ from rasterio import windows
 
 from rasterio.features import geometry_mask
 
-import utils
+import utils.constants
 
 
 def convert_geojson_to_numpy_array_mask(geojson_path, image_shape, image_transform):
