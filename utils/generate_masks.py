@@ -85,6 +85,7 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
         """
 
     for idx in range(len(image_names)):
+        print("GeoJSON file: {}".format(geojson_names[idx]))
         geojson_filepath = os.path.join(geojson_directory_path, geojson_names[idx])
         image_filepath = os.path.join(image_directory_path, image_names[idx])
 
@@ -112,11 +113,11 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
                                                            transform)
                 dot = output_name.rfind(".")
                 name = output_name[:dot] + ".npy"
-                print("Saved label: {}".format(os.path.join(output_path, "labels", name)))
+                # print("Saved label: {}".format(os.path.join(output_path, "labels", name)))
 
                 np.save(str(os.path.join(output_path, "labels", name)), mask)
 
                 with rasterio.open(patch_output_filepath, 'w', **meta) as outds:
-                    print("Saved patch: {}".format(patch_output_filepath))
+                    # print("Saved patch: {}".format(patch_output_filepath))
                     outds.write(dataset.read(window=window))
 
