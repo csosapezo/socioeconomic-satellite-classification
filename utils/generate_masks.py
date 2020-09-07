@@ -106,8 +106,10 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
                                                            transform)
                 dot = output_name.rfind(".") - 1
                 name = output_name[:dot] + ".npy"
+                print("Saved label: {}".format(os.path.join(output_path, "labels", name)))
                 np.save(str(os.path.join(output_path, "labels", name)), mask)
 
                 with rasterio.open(patch_output_filepath, 'w', **meta) as outds:
+                    print("Saved patch: {}".format(patch_output_filepath))
                     outds.write(dataset.read(window=window))
 
