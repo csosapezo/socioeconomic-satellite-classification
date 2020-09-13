@@ -1,8 +1,6 @@
 import argparse
 import os
 
-from torch.backends import cudnn
-
 import utils
 
 
@@ -25,8 +23,6 @@ def main():
     arg('--limit', type=int, default=100, help='maximum amount of images')
 
     args = parser.parse_args()
-
-    cudnn.benchmark = True
 
     # Preprocessing
 
