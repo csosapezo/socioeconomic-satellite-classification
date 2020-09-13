@@ -93,7 +93,7 @@ def cal_dir_stat(directory_path, image_filenames, set_indices=None,
     channel_sum = np.zeros(num_channel)
     channel_sum_squared = np.zeros(num_channel)
 
-    if not set_indices:
+    if set_indices is None:
         set_indices = list(range(len(image_filenames)))
 
     for idx in set_indices:
