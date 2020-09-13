@@ -37,8 +37,8 @@ def main():
     max_value, mean_train, std_train = utils.mean_std(args.images_path, image_file_names, train_set_indices)
 
     print(f"Max value: {max_value}")
-    print(f"Mean: {mean_train:.2f}")
-    print(f"Std: {std_train:.2f}")
+    print(f"Mean: {mean_train}")
+    print(f"Std: {std_train}")
 
 
 if __name__ == "__main__":
