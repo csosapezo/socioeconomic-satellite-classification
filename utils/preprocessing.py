@@ -99,7 +99,7 @@ def cal_dir_stat(directory_path, image_filenames, set_indices=None,
     for idx in set_indices:
         with rasterio.open(str(os.path.join(directory_path, image_filenames[idx]))) as dataset:
             img = dataset.read()
-
+            img = img.transpose((1, 2, 0))
             img = img / maximun_value
             pixel_num += (img.size / num_channel)
             channel_sum += np.sum(img, axis=(0, 1))
