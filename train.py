@@ -34,7 +34,11 @@ def main():
 
     train_set_indices, val_set_indices = utils.train_val_split(image_file_names, utils.constants.train_val_split)
 
-    mean_train, std_train = utils.mean_std(args.images_path, image_file_names, train_set_indices)
+    max_value, mean_train, std_train = utils.mean_std(args.images_path, image_file_names, train_set_indices)
+
+    print(f"Max value: {max_value}")
+    print(f"Mean: {mean_train:.2f}")
+    print(f"Std: {std_train:.2f}")
 
 
 if __name__ == "__main__":

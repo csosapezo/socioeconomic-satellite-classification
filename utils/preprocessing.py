@@ -119,4 +119,4 @@ def mean_std(directory_path, image_filenames, train_set_indices, num_channel=4):
 
     mean_train, std_train = cal_dir_stat(directory_path, image_filenames, train_set_indices, max_pixel_all, num_channel)
 
-    return mean_train, std_train
+    return max_pixel_all, mean_train, std_train
