@@ -56,7 +56,7 @@ def train_val_split(dataset, split_percent):
     dataset_size = len(dataset)
 
     indices = np.random.permutation(np.arange(dataset_size))
-    val_size = split_percent * dataset_size
+    val_size = int(split_percent * dataset_size)
 
     train_set_indices = indices[val_size:]
     val_set_indices = indices[:val_size]
