@@ -37,5 +37,6 @@ def main():
     mean_train, std_train = utils.mean_std(args.images_path, image_file_names, train_set_indices)
 
 
-
+if __name__ == "__main__":
+    main()
 
