@@ -70,15 +70,15 @@ def main():
         ImageOnly(Normalize(mean=mean_train, std=std_train))
     ])
 
-    train_set_images = [image_file_names[idx] for idx in train_set_indices]
+    train_set_images = [np_file_names[idx] for idx in train_set_indices]
     train_set_labels = [labels_file_names[idx] for idx in train_set_indices]
 
-    val_set_images = [image_file_names[idx] for idx in val_set_indices]
+    val_set_images = [np_file_names[idx] for idx in val_set_indices]
     val_set_labels = [labels_file_names[idx] for idx in val_set_indices]
 
-    train_loader = utils.make_loader(args.images_path, args.mask_path, train_set_images, train_set_labels,
+    train_loader = utils.make_loader(args.numpy_images_path, args.mask_path, train_set_images, train_set_labels,
                                      False, train_transform, 'train', args.batch_size)
-    valid_loader = utils.make_loader(args.images_path, args.mask_path, val_set_images, val_set_labels,
+    valid_loader = utils.make_loader(args.numpy_images_path, args.mask_path, val_set_images, val_set_labels,
                                      False, val_transform, 'train', args.batch_size)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
