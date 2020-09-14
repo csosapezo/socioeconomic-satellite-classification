@@ -6,7 +6,7 @@ from torch.utils.data.dataset import Dataset
 
 
 class AOI_11_Rotterdam_Dataset(Dataset):
-    def __init__(self, img_path: list, mask_path: list, img_names: list, mask_names: list,
+    def __init__(self, img_path, mask_path, img_names: list, mask_names: list,
                  transform=None, mode='train', limit=None):
         self.img_path = img_path
         self.mask_path = mask_path
@@ -20,8 +20,8 @@ class AOI_11_Rotterdam_Dataset(Dataset):
         return len(self.img_path)
 
     def __getitem__(self, idx):
-        img_file_name = os.path.join(self.img_path[idx], self.img_names[idx])
-        mask_file_name = os.path.join(self.mask_path[idx], self.mask_names[idx])
+        img_file_name = os.path.join(self.img_path, self.img_names[idx])
+        mask_file_name = os.path.join(self.mask_path, self.mask_names[idx])
 
         img = load_image(img_file_name)
 
