@@ -138,7 +138,7 @@ def mean_std(directory_path, image_filenames):
     mean /= nb_samples
     std /= nb_samples
 
-    return max_pixel_all, mean, std
+    return max_pixel_all, mean.numpy(), std.numpy()
 
 
 def fill_zeros(images_path, image_file_names, output_path, mean):
