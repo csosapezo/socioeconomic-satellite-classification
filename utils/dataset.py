@@ -52,5 +52,5 @@ def load_image(path):  # Input:CH,H,W  Output:H,W,CH
 def load_mask(path):  # Input:H,W  Output:H,W,CH
     mask = np.load(path, allow_pickle=True)
     mask = np.expand_dims(mask, -1)
-    mask = np.float16(mask)
+    mask = np.float32(mask)
     return mask
