@@ -6,6 +6,7 @@ from torch.backends import cudnn
 
 import models
 import utils
+from utils.metrics_prediction import find_metrics
 from utils.transform import DualCompose, CenterCrop, HorizontalFlip, VerticalFlip, Rotate, ImageOnly, Normalize
 
 
@@ -101,8 +102,22 @@ def main():
 
     if not os.path.exists(".model/"):
         os.mkdir(".model/")
-    
+
     torch.save(model.module.state_dict(), '.model/model{}_{}_{}epochs.pth'.format(name_file, "UNet", args.n_epochs))
+
+    find_metrics(images_path=args.numpy_images_path,
+                 mask_path=args.mask_path,
+                 train_set_images=train_set_images,
+                 train_set_labels=train_set_labels,
+                 val_set_images=val_set_images,
+                 val_set_labels=val_set_labels,
+                 mean_values=mean_train,
+                 std_values=std_train,
+                 model=model,
+                 name_model=args.model,
+                 epochs=args.n_epochs,
+                 dataset_file=args.dataset_file,
+                 name_file=name_file)
 
 
 if __name__ == "__main__":
