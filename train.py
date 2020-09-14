@@ -33,6 +33,7 @@ def main():
     args = parser.parse_args()
 
     model = models.UNet()
+    model = torch.nn.DataParallel(model, device_ids=[0, 1]).cuda()
 
     cudnn.benchmark = True
 
