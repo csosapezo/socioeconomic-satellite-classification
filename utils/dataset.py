@@ -31,6 +31,7 @@ class AOI_11_Rotterdam_Dataset(Dataset):
 
             img, mask = self.transform(img, mask)
             print(f"post shape: {mask.shape}")
+            mask = np.expand_dims(mask, -1)
 
             return to_float_tensor(img), torch.from_numpy(np.expand_dims(mask, 0)).float()
         else:
