@@ -40,9 +40,11 @@ def main():
 
     image_file_names = os.listdir(args.images_path)
     image_file_names.sort()
+    print(f"Images: {len(image_file_names)}")
 
     labels_file_names = os.listdir(args.mask_path)
     labels_file_names.sort()
+    print(f"Labels: {len(labels_file_names)}")
 
     train_set_indices, val_set_indices = utils.train_val_split(image_file_names, utils.constants.train_val_split)
 
