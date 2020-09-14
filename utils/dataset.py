@@ -44,12 +44,12 @@ def to_float_tensor(img):
 
 
 def load_image(path):  # Input:CH,H,W  Output:H,W,CH
-    img = np.load(str(path))
+    img = np.load(str(path), allow_pickle=True)
     img = img.transpose((1, 2, 0))
     return img
 
 
 def load_mask(path):  # Input:H,W  Output:H,W,CH
-    mask = np.load(path)
+    mask = np.load(path, allow_pickle=True)
     mask = np.expand_dims(mask, -1)
     return mask
