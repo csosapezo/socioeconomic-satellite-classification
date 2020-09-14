@@ -60,7 +60,6 @@ def main():
 
     train_transform = DualCompose([
         CenterCrop(utils.constants.height),
-        HorizontalFlip(),
         Rotate(),
         ImageOnly(Normalize(mean=mean_train, std=std_train))
     ])
