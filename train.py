@@ -36,7 +36,7 @@ def main():
 
     cudnn.benchmark = True
 
-    name_file = '_' + str(int(args.percent * 100)) + '_percent'
+    name_file = '_' + str(int(utils.constants.train_val_split * 100)) + '_percent'
 
     image_file_names = os.listdir(args.images_path)
     image_file_names.sort()
