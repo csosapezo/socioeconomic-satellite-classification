@@ -1,3 +1,4 @@
+import os
 import time
 import torch
 import copy
@@ -17,6 +18,9 @@ def train_model(name_file, model, optimizer, scheduler, dataloaders, name_model,
 
     best_model_wts = copy.deepcopy(model.state_dict())
     best_loss = 1e10
+
+    if not os.path.exists("./history/"):
+        os.mkdir("./history/")
 
     f = open("./history/history_model{}_{}_{}epochs.txt".format(name_file, name_model, num_epochs), "w+")
 

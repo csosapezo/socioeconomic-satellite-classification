@@ -94,7 +94,7 @@ def main():
         optimizer=optimizer,
         scheduler=scheduler,
         dataloaders=dataloaders,
-        name_model=model.__class__,
+        name_model=model.__class__.__name__,
         num_epochs=args.n_epochs
     )
 
