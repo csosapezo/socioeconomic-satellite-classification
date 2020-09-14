@@ -1,6 +1,6 @@
 # cropped patches shape
-width = 300
-height = 300
+width = 256
+height = 256
 
 # cropped patches zero sum percentage
 max_equals0 = 0.10
