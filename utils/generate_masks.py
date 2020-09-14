@@ -114,7 +114,7 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
 
                 mask = convert_geojson_to_numpy_array_mask(geojson_filepath, (window.width, window.height),
                                                            transform)
-                print(mask.min())
+                print(mask.max())
                 dot = output_name.rfind(".")
                 name = output_name[:dot] + ".npy"
 
