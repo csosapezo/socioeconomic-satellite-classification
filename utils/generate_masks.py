@@ -126,7 +126,8 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
                     equals0 = (sum_channels == 0).astype(np.uint8)
                     sum_percent = np.sum(equals0) / (window.width * window.height)
 
-                    if sum_percent <= utils.constants.max_equals0 and (patch_array.shape[0] == patch_array.shape[1]):
+                    if sum_percent <= utils.constants.max_equals0 \
+                            and (meta['widht'] == utils.constants.width) and (meta['height'] == utils.constants.height):
                         outds.write(patch_array)
                         np.save(str(os.path.join(output_path, "labels", name)), mask)
                     else:
