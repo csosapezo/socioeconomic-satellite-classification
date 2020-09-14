@@ -29,7 +29,7 @@ def save_rasters_as_ndarrays(images_directory_path, image_names, output_path):
         with rasterio.open(str(os.path.join(images_directory_path, name))) as dataset:
             raster = dataset.read()
 
-            dot = name.rfind(".") - 1
+            dot = name.rfind(".")
             np_name = name[:dot] + ".npy"
             np_image_names.append(np_name)
 
@@ -120,3 +120,27 @@ def mean_std(directory_path, image_filenames, train_set_indices, num_channel=4):
     mean_train, std_train = cal_dir_stat(directory_path, image_filenames, train_set_indices, max_pixel_all, num_channel)
 
     return max_pixel_all, mean_train, std_train
+
+
+def fill_zeros(images_path, image_file_names, output_path, mean):
+    np_image_names = []
+
+    if not os.path.exists(output_path):
+        os.mkdir(output_path)
+
+    for name in image_file_names:
+        with rasterio.open(str(os.path.join(images_path, name))) as dataset:
+            raster = dataset.read()
+
+            raster[0][:][raster[0][:] == 0] = mean[0]
+            raster[1][:][raster[0][:] == 0] = mean[1]
+            raster[2][:][raster[0][:] == 0] = mean[2]
+            raster[3][:][raster[0][:] == 0] = mean[3]
+
+            dot = name.rfind(".")
+            np_name = name[:dot] + ".npy"
+            np_image_names.append(np_name)
+
+            np.save(str(os.path.join(output_path, "images", np_name)), raster)
+
+    return np_image_names
