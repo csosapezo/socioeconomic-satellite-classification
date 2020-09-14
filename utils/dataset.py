@@ -24,7 +24,6 @@ class AOI_11_Rotterdam_Dataset(Dataset):
         mask_file_name = os.path.join(self.mask_path, self.mask_names[idx])
 
         img = load_image(img_file_name)
-        print(f"shape: {img.shape}")
 
         if self.mode == 'train':
             mask = load_mask(mask_file_name)
