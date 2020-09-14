@@ -15,7 +15,7 @@ class DualCompose:
     def __call__(self, x, mask=None):
         for t in self.transforms:
             x, mask = t(x, mask)
-            print(f"shape tras trasform {t.__class__.__name___}: {x.shape}")
+            print(f"shape tras trasform {t.__class__.__name__}: {x.shape}")
         return x, mask
 
 
