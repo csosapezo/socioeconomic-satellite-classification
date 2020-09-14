@@ -29,8 +29,10 @@ def convert_geojson_to_numpy_array_mask(geojson_path, image_shape, image_transfo
 
     with fiona.open(geojson_path) as f:
         geojson = [roof_data['geometry'] for roof_data in f]
+        print("Data found")
 
     if not geojson:
+        print("No data")
         return np.zeros(image_shape)
 
     return geometry_mask(geojson, image_shape, image_transform, all_touched=True, invert=True)
@@ -112,8 +114,6 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
                 output_name = output_filename.format(int(window.col_off), int(window.row_off))
                 patch_output_filepath = os.path.join(output_path, "split", output_name)
 
-                print("X: ", image_names[idx])
-                print("Y: ", geojson_names[idx])
                 mask = convert_geojson_to_numpy_array_mask(geojson_filepath, (window.width, window.height),
                                                            transform)
                 dot = output_name.rfind(".")
