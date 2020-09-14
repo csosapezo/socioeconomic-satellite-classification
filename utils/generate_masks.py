@@ -119,14 +119,13 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
 
                 # print("Saved label: {}".format(os.path.join(output_path, "labels", name))
 
-                with rasterio.open(patch_output_filepath, 'w', **meta) as outds:
-                    # print("Saved patch: {}".format(patch_output_filepath))
-                    patch_array = dataset.read(window=window)
-                    sum_channels = np.sum(patch_array, axis=0)
-                    equals0 = (sum_channels == 0).astype(np.uint8)
-                    sum_percent = np.sum(equals0) / (window.width * window.height)
+                if sum_percent <= utils.constants.max_equals0:
+                    with rasterio.open(patch_output_filepath, 'w', **meta) as outds:
+                        # print("Saved patch: {}".format(patch_output_filepath))
+                        patch_array = dataset.read(window=window)
+                        sum_channels = np.sum(patch_array, axis=0)
+                        equals0 = (sum_channels == 0).astype(np.uint8)
+                        sum_percent = np.sum(equals0) / (window.width * window.height)
 
-                    if sum_percent <= utils.constants.max_equals0:
                         outds.write(patch_array)
                         np.save(str(os.path.join(output_path, "labels", name)), mask)
-
