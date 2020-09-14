@@ -114,7 +114,7 @@ def main():
                  mean_values=mean_train,
                  std_values=std_train,
                  model=model,
-                 name_model=args.model,
+                 name_model="UNet",
                  epochs=args.n_epochs,
                  dataset_file=args.dataset_file,
                  name_file=name_file)
