@@ -28,7 +28,6 @@ class AOI_11_Rotterdam_Dataset(Dataset):
         if self.mode == 'train':
             mask = load_mask(mask_file_name)
             img, mask = self.transform(img, mask)
-            mask = np.expand_dims(mask, -1)
 
             return to_float_tensor(img), torch.from_numpy(np.expand_dims(mask, 0)).float()
         else:
