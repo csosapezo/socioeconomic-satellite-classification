@@ -28,7 +28,10 @@ def main():
 
     # List file names for rasters and geoJSOM label data
     image_file_names = os.listdir(args.images_path)
+    image_file_names.sort()
+
     geojson_file_names = os.listdir(args.geojson_path)
+    geojson_file_names.sort()
 
     if args.limit > 0:
         image_file_names = image_file_names[:args.limit]
