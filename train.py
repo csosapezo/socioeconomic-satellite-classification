@@ -115,9 +115,7 @@ def main():
                  std_values=std_train,
                  model=model,
                  name_model="UNet",
-                 epochs=args.n_epochs,
-                 dataset_file=args.dataset_file,
-                 name_file=name_file)
+                 epochs=args.n_epochs)
 
 
 if __name__ == "__main__":

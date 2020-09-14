@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from utils import make_loader
+from utils import make_loader, utils
 from utils.loss import dice_loss, metric_jaccard  # this is loss
 from utils.transform import DualCompose, CenterCrop, ImageOnly, Normalize
 
@@ -49,20 +49,19 @@ def print_metrics(metrics, file, phase='train', epoch_samples=1):
 
 
 def find_metrics(images_path, mask_path, train_set_images, train_set_labels, val_set_images, val_set_labels,
-                 mean_values, std_values, model, name_model='UNet11', epochs=40, dataset_file='VHR',
-                 name_file='_VHR_60_fake'):
+                 mean_values, std_values, model, name_model='UNet11', epochs=40):
 
     if not os.path.exists("predictions/"):
         os.mkdir("predictions/")
 
-    f = open("predictions/metric{}_{}_{}epochs.txt".format(name_file, name_model, epochs), "w+")
-    f2 = open("predictions/pred_loss_test{}_{}epochs.txt".format(name_file, name_model, epochs), "w+")
+    f = open("predictions/metric_{}_{}_epochs.txt".format(name_model, epochs), "w+")
+    f2 = open("predictions/pred_loss_test{}_{}_epochs.txt".format(name_model, epochs), "w+")
     f.write("Training mean_values:[{}], std_values:[{}] \n".format(mean_values, std_values))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     all_transform = DualCompose([
-        CenterCrop(int(dataset_file)),
+        CenterCrop(utils.constants.height),
         ImageOnly(Normalize(mean=mean_values, std=std_values))
     ])
 
