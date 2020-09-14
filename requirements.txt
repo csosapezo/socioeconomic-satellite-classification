@@ -22,3 +22,6 @@ six==1.15.0
 snuggs==1.4.7
 torch==1.6.0
 torchvision==0.7.0
+
+tifffile~=2020.9.3
+argparse~=1.4.0
