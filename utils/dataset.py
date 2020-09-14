@@ -51,6 +51,8 @@ def load_image(path):  # Input:CH,H,W  Output:H,W,CH
 
 def load_mask(path):  # Input:H,W  Output:H,W,CH
     mask = np.load(path, allow_pickle=True)
+    print(f"pre shape: {mask.shape}")
     mask = np.expand_dims(mask, -1)
     mask = np.float32(mask)
+    print(f"post shape: {mask.shape}")
     return mask
