@@ -41,6 +41,7 @@ class UNet(nn.Module):
         :param input_channels: input channels
         :param n_class: number of segmentation classes
         """
+        self.n_class = n_class
         super().__init__()
 
         self.dconv_down1 = double_conv(input_channels, 64)
@@ -89,7 +90,7 @@ class UNet(nn.Module):
 
         x = self.dconv_up1(x)
 
-        if self.num_classes > 1:
+        if self.n_class > 1:
             x = self.conv_last(x)
             out = functional.log_softmax(x, dim=1)
         else:
