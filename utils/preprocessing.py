@@ -141,6 +141,6 @@ def fill_zeros(images_path, image_file_names, output_path, mean):
             np_name = name[:dot] + ".npy"
             np_image_names.append(np_name)
 
-            np.save(str(os.path.join(output_path, "images", np_name)), raster)
+            np.save(str(os.path.join(output_path, np_name)), raster)
 
     return np_image_names
