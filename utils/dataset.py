@@ -27,8 +27,10 @@ class AOI_11_Rotterdam_Dataset(Dataset):
 
         if self.mode == 'train':
             mask = load_mask(mask_file_name)
+            print(f"pre shape: {mask.shape}")
 
             img, mask = self.transform(img, mask)
+            print(f"post shape: {mask.shape}")
 
             return to_float_tensor(img), torch.from_numpy(np.expand_dims(mask, 0)).float()
         else:
@@ -51,8 +53,6 @@ def load_image(path):  # Input:CH,H,W  Output:H,W,CH
 
 def load_mask(path):  # Input:H,W  Output:H,W,CH
     mask = np.load(path, allow_pickle=True)
-    print(f"pre shape: {mask.shape}")
     mask = np.expand_dims(mask, -1)
     mask = np.float32(mask)
-    print(f"post shape: {mask.shape}")
     return mask
