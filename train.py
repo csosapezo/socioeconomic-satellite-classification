@@ -99,7 +99,10 @@ def main():
         num_epochs=args.n_epochs
     )
 
-    torch.save(model.module.state_dict(), '.model/model{}_{}_{}epochs'.format(name_file, "UNet", args.n_epochs))
+    if not os.path.exists(".model/"):
+        os.mkdir(".model/")
+    
+    torch.save(model.module.state_dict(), '.model/model{}_{}_{}epochs.pth'.format(name_file, "UNet", args.n_epochs))
 
 
 if __name__ == "__main__":
