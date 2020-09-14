@@ -52,6 +52,9 @@ def find_metrics(images_path, mask_path, train_set_images, train_set_labels, val
                  mean_values, std_values, model, name_model='UNet11', epochs=40, dataset_file='VHR',
                  name_file='_VHR_60_fake'):
 
+    if not os.path.exists("predictions/"):
+        os.mkdir("predictions/")
+
     f = open("predictions/metric{}_{}_{}epochs.txt".format(name_file, name_model, epochs), "w+")
     f2 = open("predictions/pred_loss_test{}_{}epochs.txt".format(name_file, name_model, epochs), "w+")
     f.write("Training mean_values:[{}], std_values:[{}] \n".format(mean_values, std_values))
