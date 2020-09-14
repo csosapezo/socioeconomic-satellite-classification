@@ -24,13 +24,11 @@ class AOI_11_Rotterdam_Dataset(Dataset):
         mask_file_name = os.path.join(self.mask_path, self.mask_names[idx])
 
         img = load_image(img_file_name)
+        print(f"shape: {img.shape}")
 
         if self.mode == 'train':
             mask = load_mask(mask_file_name)
-            print(f"pre shape: {mask.shape}")
-
             img, mask = self.transform(img, mask)
-            print(f"post shape: {mask.shape}")
             mask = np.expand_dims(mask, -1)
 
             return to_float_tensor(img), torch.from_numpy(np.expand_dims(mask, 0)).float()
