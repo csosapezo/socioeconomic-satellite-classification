@@ -27,7 +27,7 @@ def main():
         help='path in which numpy arrays are stored as numPy arrays')
     arg('--batch-size', type=int, default=4, help='HR:4,VHR:8')
     arg('--limit', type=int, default=10000, help='number of images in epoch')
-    arg('--n-epochs', type=int, default=40)
+    arg('--n-epochs', type=int, default=400)
     arg('--lr', type=float, default=1e-3)
 
     args = parser.parse_args()
@@ -99,7 +99,7 @@ def main():
         num_epochs=args.n_epochs
     )
 
-    torch.save(model.module.state_dict(), '.model/model{}_{}_{}epochs'.format(name_file, args.model, args.n_epochs))
+    torch.save(model.module.state_dict(), '.model/model{}_{}_{}epochs'.format(name_file, "UNet", args.n_epochs))
 
 
 if __name__ == "__main__":
