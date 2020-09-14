@@ -112,6 +112,8 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
                 output_name = output_filename.format(int(window.col_off), int(window.row_off))
                 patch_output_filepath = os.path.join(output_path, "split", output_name)
 
+                print("X: ", image_names[idx])
+                print("Y: ", geojson_names[idx])
                 mask = convert_geojson_to_numpy_array_mask(geojson_filepath, (window.width, window.height),
                                                            transform)
                 dot = output_name.rfind(".")
