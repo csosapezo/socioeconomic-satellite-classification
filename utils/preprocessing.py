@@ -2,13 +2,12 @@ import glob
 import os
 
 import numpy as np
-import tifffile
 import rasterio
+import pickle
+import tifffile
+import torchvision.transforms as T
 from torch.utils.data import DataLoader
 from torch.utils.data.dataset import Dataset
-import torchvision.transforms as T
-
-import utils
 
 
 class MeanStdDataset(Dataset):
@@ -59,7 +58,7 @@ def save_rasters_as_ndarrays(images_directory_path, image_names, output_path):
             np_name = name[:dot] + ".npy"
             np_image_names.append(np_name)
 
-            np.save(str(os.path.join(output_path, "images", np_name)), raster)
+            pickle.dump(raster, open(str(os.path.join(output_path, "images", np_name)), "wb"))
 
     return np_image_names
 
@@ -160,6 +159,6 @@ def fill_zeros(images_path, image_file_names, output_path, mean):
             np_name = name[:dot] + ".npy"
             np_image_names.append(np_name)
 
-            np.save(str(os.path.join(output_path, np_name)), raster)
+            pickle.dump(raster, open(str(os.path.join(output_path, np_name)), "wb"))
 
     return np_image_names

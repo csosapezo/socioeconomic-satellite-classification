@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import os
+import pickle
 
 from torch.utils.data.dataset import Dataset
 
@@ -43,12 +44,12 @@ def to_float_tensor(img):
 
 
 def load_image(path):  # Input:CH,H,W  Output:H,W,CH
-    img = np.load(str(path), allow_pickle=True)
+    img = pickle.load(open(path, "rb"))
     img = img.transpose((1, 2, 0))
     return img
 
 
 def load_mask(path):  # Input:H,W  Output:H,W,CH
-    mask = np.load(path, allow_pickle=True)
+    mask = pickle.load(open(path, "rb"))
     mask = np.float32(mask)
     return mask

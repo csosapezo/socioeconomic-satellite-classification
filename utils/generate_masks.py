@@ -5,6 +5,7 @@ import fiona
 import matplotlib.pyplot as plt
 import numpy as np
 import rasterio
+import pickle
 from rasterio import windows
 
 from rasterio.features import geometry_mask
@@ -130,7 +131,6 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
                     if sum_percent <= utils.constants.max_equals0 \
                             and (meta['width'] == utils.constants.width) and (meta['height'] == utils.constants.height):
                         outds.write(patch_array)
-                        np.save(str(os.path.join(output_path, "labels", name)), mask)
+                        pickle.dump(mask, open(str(os.path.join(output_path, "labels", name)), "wb"))
                     else:
                         os.remove(patch_output_filepath)
-
