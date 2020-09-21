@@ -5,6 +5,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
+import utils
 from utils import make_loader
 from utils.loss import dice_loss, metric_jaccard  # this is loss
 from utils.transform import DualCompose, CenterCrop, ImageOnly, Normalize
