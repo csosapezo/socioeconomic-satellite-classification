@@ -8,7 +8,7 @@ from models.unet import UNet
 
 class BuildingSegmentation(object):
     def __init__(self, model_path):
-        self.model = model_utils.load_model(model_path, UNet())
+        self.model = model_utils.load_model(model_path)
 
     def image_loader(self, img):
         """Preprocesa una imagen para ser apta para entrar en el modelo de segmentación."""
