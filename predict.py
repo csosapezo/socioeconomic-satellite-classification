@@ -18,7 +18,7 @@ def main():
     raster = data.read()
     metadata = data.profile
 
-    output = model.predict(raster)
+    output = model.predict(raster).data.cpu().numpy()
 
     metadata['count'] = 1
     metadata['height'] = output.shape[1]
