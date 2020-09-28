@@ -5,9 +5,16 @@ import numpy as np
 import rasterio
 import pickle
 import tifffile
+import torch
 import torchvision.transforms as T
+from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from torch.utils.data.dataset import Dataset
+
+from utils.dataset import to_float_tensor
+from utils.transform import DualCompose, CenterCrop, ImageOnly, Normalize
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 class MeanStdDataset(Dataset):
@@ -162,3 +169,27 @@ def fill_zeros(images_path, image_file_names, output_path, mean):
             pickle.dump(raster, open(str(os.path.join(output_path, np_name)), "wb"))
 
     return np_image_names
+
+
+def preprocess_image(img):
+    """Normaliza y transforma la imagen en un tensor apto para ser procesado por la red neuronal de segmentación de
+    cuerpos de agua.
+    Dimensiones: entrada: (4,256,256); salida: (1,4,256,256)
+    :param img: imagen por preprocesar
+    :type img: np.ndarray
+    """
+    img = img.transpose((1, 2, 0))
+    image_transform = transform_function()
+    img_for_model = image_transform(img)[0]
+    img_for_model = Variable(to_float_tensor(img_for_model), requires_grad=False)
+    img_for_model = img_for_model.unsqueeze(0).to(device)
+
+    return img_for_model
+
+
+def transform_function():
+    """Función de normalización para una imagen satelital."""
+    image_transform = DualCompose([CenterCrop(256), ImageOnly(
+        Normalize(mean=[118.9308, 163.46594, 167.29922, 356.9652],
+                  std=[75.99471, 83.11909, 102.464455, 202.43672]))])
+    return image_transform
