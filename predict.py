@@ -18,8 +18,7 @@ def main():
     raster = data.read()
     metadata = data.profile
 
-    preprocessed = model.image_loader(raster)
-    output = model.predict(preprocessed)
+    output = model.predict(raster)
 
     metadata['count'] = 1
     metadata['height'] = output.shape[1]
