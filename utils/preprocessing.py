@@ -178,6 +178,7 @@ def preprocess_image(img):
     :param img: imagen por preprocesar
     :type img: np.ndarray
     """
+    print(img.shape)
     img = img.transpose((1, 2, 0))
     image_transform = transform_function()
     img_for_model = image_transform(img)[0]
