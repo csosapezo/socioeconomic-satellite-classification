@@ -178,7 +178,7 @@ def preprocess_image(img):
     :param img: imagen por preprocesar
     :type img: np.ndarray
     """
-    img = img.transpose((1, 2, 0))
+    img = img.transpose(1, 2, 0)
     image_transform = transform_function()
     img_for_model = image_transform(img)[0]
     img_for_model = Variable(to_float_tensor(img_for_model), requires_grad=False)
