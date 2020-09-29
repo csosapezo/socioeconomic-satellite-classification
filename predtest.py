@@ -5,7 +5,7 @@ import rasterio
 
 from utils.segmenter import BuildingSegmentation
 
-MODEL_PATH = ".model/model_25_percent_UNet_500epochs.pth"
+MODEL_PATH = ".model/model_25_percent_UNet_700epochs.pth"
 INPUT_DIR = "data/train/split/"
 UPLOAD_DIRECTORY = "results/"
 
