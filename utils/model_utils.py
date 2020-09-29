@@ -43,6 +43,6 @@ def run_model(input_layer, model):
     model.eval()
 
     with torch.set_grad_enabled(False):
-        response = model(input_layer)
+        response = torch.sigmoid(model(input_layer))
 
     return response
