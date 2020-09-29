@@ -5,8 +5,8 @@ import rasterio
 from utils.segmenter import BuildingSegmentation
 
 MODEL_PATH = ".model/model_25_percent_UNet_500epochs.pth"
-INPUT_DIR = "data/train/AOI_11_Rotterdam/PS-RGBNIR/"
-INPUT = "SN6_Train_AOI_11_Rotterdam_PS-RGBNIR_20190823161806_20190823162129_tile_2747.tif"
+INPUT_DIR = "data/train/split/"
+INPUT = "SN6_Train_AOI_11_Rotterdam_PS-RGBNIR_20190804120223_20190804120456_tile_57_subtile_256-256.tif"
 UPLOAD_DIRECTORY = "results/"
 
 
