@@ -24,6 +24,8 @@ def main():
     metadata['height'] = output.shape[1]
     metadata['width'] = output.shape[2]
     print(f"height: {metadata['height']} - width: {metadata['width']}")
+    print(output.min())
+    print(output.max())
     metadata['dtype'] = output.dtype
     mask_filename = INPUT[:-4] + "_MASK.TIF"
 
