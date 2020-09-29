@@ -26,7 +26,7 @@ def main():
         help='path in which labels are located as .npy files')
     arg('--data-path', type=str, default='./data/train/',
         help='path in which numpy arrays are stored as numPy arrays')
-    arg('--batch-size', type=int, default=4, help='HR:4,VHR:8')
+    arg('--batch-size', type=int, default=16, help='HR:4,VHR:8')
     arg('--limit', type=int, default=10000, help='number of images in epoch')
     arg('--n-epochs', type=int, default=500)
     arg('--lr', type=float, default=1e-3)
