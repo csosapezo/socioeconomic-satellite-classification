@@ -7,10 +7,6 @@ connR.enable_load_extension(True)
 connR.execute('SELECT load_extension("mod_spatialite.so")')
 connR.execute('SELECT InitSpatialMetaData(1);')
 
-# libspatialite
-connR.execute('SELECT load_extension("libspatialite.so")')
-connR.execute('SELECT InitSpatialMetaData();')
-
 print("Introduza el área a buscar")
 start_x = input("X inicial:")
 offset_x = input("offset:")
