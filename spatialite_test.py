@@ -4,11 +4,11 @@ connR = sqlite3.connect(':memory:')
 
 connR.enable_load_extension(True)
 
-connR.execute('SELECT load_extension("mod_spatialite")')
+connR.execute('SELECT load_extension("mod_spatialite.so")')
 connR.execute('SELECT InitSpatialMetaData(1);')
 
 # libspatialite
-connR.execute('SELECT load_extension("libspatialite")')
+connR.execute('SELECT load_extension("libspatialite.so")')
 connR.execute('SELECT InitSpatialMetaData();')
 
 # open database
