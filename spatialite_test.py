@@ -20,5 +20,10 @@ search_polygon = 'POLYGON({0} {1}, {0} {2}, {3} {1}, {3} {2}, {0} {1})'.format(s
 
 select = 'SELECT AsText(GeomFromWKB(GEOMETRY))'
 from_where = 'FROM planos WHERE ST_Intersects(GeomFromText(search_polygon)GeomFromWKB(GEOMETRY)) = 1 '
+query = select + ' ' + from_where
 
-connR.execute(select + ' ' + from_where)
+print("Consulta:")
+print(query)
+input()
+
+connR.execute(query)
