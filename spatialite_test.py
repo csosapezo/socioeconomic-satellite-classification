@@ -1,11 +1,8 @@
 import sqlite3
 
-connR = sqlite3.connect(':memory:')
+connR = sqlite3.connect('planos.sqlite')
 
 connR.enable_load_extension(True)
-
-# open database
-connR.execute('.open planos.sqlite')
 
 connR.execute('SELECT load_extension("mod_spatialite.so")')
 connR.execute('SELECT InitSpatialMetaData(1);')
