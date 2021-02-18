@@ -24,4 +24,4 @@ print("Consulta:")
 print(query)
 input()
 
-print(connR.execute(query).fetchone())
+print(connR.execute(query).fetchall())
