@@ -16,10 +16,10 @@ offset_y = input("offset:")
 end_x = start_x + offset_x
 end_y = start_y + offset_y
 
-search_polygon = 'POLYGON({0} {1}, {0} {2}, {3} {1}, {3} {2}, {0} {1})'.format(start_x, start_y, end_y, end_x)
+search_polygon = 'POLYGON(({0} {1}, {0} {2}, {3} {1}, {3} {2}, {0} {1}))'.format(start_x, start_y, end_y, end_x)
 
 select = 'SELECT AsText(GeomFromWKB(GEOMETRY))'
-from_where = 'FROM planos WHERE ST_Intersects(GeomFromText("{}"), GeomFromWKB(GeometryN(GEOMETRY,1))) = 1 '\
+from_where = 'FROM planos WHERE ST_Intersects(GeomFromText("{}"), GeometryN(GeomFromWKB(GEOMETRY),1)) = 1 '\
     .format(search_polygon)
 query = select + ' ' + from_where
 
