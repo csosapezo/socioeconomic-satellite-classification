@@ -4,7 +4,11 @@ connR = sqlite3.connect('planos.sqlite')
 
 connR.enable_load_extension(True)
 
-connR.execute('SELECT load_extension("mod_spatialite.so")')
+try:
+    connR.execute('SELECT load_extension("mod_spatialite")')
+except sqlite3.OperationalError:
+    connR.execute('SELECT load_extension("mod_spatialite.so")')
+
 connR.execute('SELECT InitSpatialMetaData(1);')
 
 print("Introduza el área a buscar")
