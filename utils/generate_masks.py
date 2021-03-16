@@ -88,6 +88,8 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
         :type output_path: str
         """
 
+    # TODO 01: Update code to work with SQLite databases instead of geoJSONs
+
     for idx in range(len(image_names)):
         print("GeoJSON file: {}".format(geojson_names[idx]))
         geojson_filepath = os.path.join(geojson_directory_path, geojson_names[idx])
@@ -113,6 +115,7 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
                 output_name = output_filename.format(int(window.col_off), int(window.row_off))
                 patch_output_filepath = os.path.join(output_path, "split", output_name)
 
+                # TODO 01.1: Replace convert_geojson_to_numpy_array_mask function
                 mask = convert_geojson_to_numpy_array_mask(geojson_filepath, (window.width, window.height),
                                                            transform)
                 print(mask.max())
