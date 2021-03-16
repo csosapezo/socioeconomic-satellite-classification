@@ -20,8 +20,6 @@ PyYAML==5.3.1
 rasterio==1.1.5
 six==1.15.0
 snuggs==1.4.7
+tifffile==2020.9.30
 torch==1.6.0
 torchvision==0.7.0
-
-tifffile~=2020.9.3
-argparse~=1.4.0
