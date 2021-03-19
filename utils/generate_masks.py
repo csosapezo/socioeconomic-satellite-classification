@@ -1,4 +1,5 @@
 import os
+import sqlite3
 from itertools import product
 
 import fiona
@@ -7,34 +8,21 @@ import numpy as np
 import rasterio
 import pickle
 from rasterio import windows
+from pyproj import Transformer
 
 from rasterio.features import geometry_mask
 
 import utils.constants
 
-
-def convert_geojson_to_numpy_array_mask(geojson_path, image_shape, image_transform):
-    """
-    Create a mask from a geoJSON file object.
-
-    :param geojson_path: mask geoJSON path
-    :type geojson_path: str
-
-    :param image_shape: image height and width
-    :type image_shape: (int, int)
-
-    :param image_transform: Affine transform
-
-    :return: generated mask
-    """
-
+"""def convert_geojson_to_numpy_array_mask(geojson_path, image_shape, image_transform):
+    
     with fiona.open(geojson_path) as f:
         geojson = [roof_data['geometry'] for roof_data in f]
 
     if not geojson:
         return np.zeros(image_shape)
 
-    return geometry_mask(geojson, image_shape, image_transform, all_touched=True, invert=True)
+    return geometry_mask(geojson, image_shape, image_transform, all_touched=True, invert=True)"""
 
 
 def plot_mask(mask):
@@ -116,9 +104,9 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
                 patch_output_filepath = os.path.join(output_path, "split", output_name)
 
                 # TODO 01.1: Replace convert_geojson_to_numpy_array_mask function
-                mask = convert_geojson_to_numpy_array_mask(geojson_filepath, (window.width, window.height),
-                                                           transform)
-                print(mask.max())
+                # mask = convert_geojson_to_numpy_array_mask(geojson_filepath, (window.width, window.height),
+                #                                           transform)
+                # print(mask.max())
                 dot = output_name.rfind(".")
                 name = output_name[:dot] + ".npy"
 
@@ -134,6 +122,6 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
                     if sum_percent <= utils.constants.max_equals0 \
                             and (meta['width'] == utils.constants.width) and (meta['height'] == utils.constants.height):
                         outds.write(patch_array)
-                        pickle.dump(mask, open(str(os.path.join(output_path, "labels", name)), "wb"))
+                        # pickle.dump(mask, open(str(os.path.join(output_path, "labels", name)), "wb"))
                     else:
                         os.remove(patch_output_filepath)

@@ -23,3 +23,5 @@ snuggs==1.4.7
 tifffile==2020.9.30
 torch==1.6.0
 torchvision==0.7.0
+pyproj~=3.0.1
+argparse~=1.4.0

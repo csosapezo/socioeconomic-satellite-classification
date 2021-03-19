@@ -19,7 +19,7 @@ end_y = input("Y final:")
 
 search_polygon = 'POLYGON(({0} {1}, {0} {2}, {3} {1}, {3} {2}, {0} {1}))'.format(start_x, start_y, end_y, end_x)
 
-select = 'select ST_Intersects(GeomFromText("{}"), GeometryN(GeomFromWKB(GEOMETRY),1)) as booll, AsText(GeometryN(' \
+select = 'select ESTRATO, ST_Intersects(GeomFromText("{}"), GeometryN(GeomFromWKB(GEOMETRY),1)) as booll, AsText(GeometryN(' \
          'GeomFromWKB(GEOMETRY),1))'.format(search_polygon)
 from_where = 'from planos where booll = 1;'
 query = select + ' ' + from_where
