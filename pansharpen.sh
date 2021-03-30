@@ -18,6 +18,9 @@ do
 
 	echo "${p_tif[0]}"
 	echo "${ms_tif[0]}"
+	
+	basename_tif=$(basename "${p_tif[0]}")
+	mkdir "$output_dir/$foldername"
 
-	gdal_pansharpen.py "${p_tif[0]}" "${ms_tif[0]}" "$output_dir/$foldername.TIF"
+	gdal_pansharpen.py "${p_tif[0]}" "${ms_tif[0]}" "$output_dir/$foldername/$basename_tif"
 done
