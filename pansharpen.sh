@@ -14,13 +14,10 @@ for folder in $list
 do
 	foldername=$(basename "$folder")
 	ms_tif=$(find "$folder" -name "*ORT_MS*.TIF")
-	# shellcheck disable=SC2086
-	p_tif=$(find $folder -name "*ORT_P*.TIF")
+	p_tif=$(find "$folder" -name "*ORT_P*.TIF")
 
-	# shellcheck disable=SC2086
-	echo ${p_tif[0]}
+	echo "${p_tif[0]}"
 	echo "${ms_tif[0]}"
 
-	# shellcheck disable=SC2086
-	gdal_pansharpen.py "${p_tif[0]}" ${ms_tif[0]} "$output_dir/$foldername.TIF"
+	gdal_pansharpen.py "${p_tif[0]}" "${ms_tif[0]}" "$output_dir/$foldername.TIF"
 done
