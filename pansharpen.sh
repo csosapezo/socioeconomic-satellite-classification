@@ -12,15 +12,15 @@ mkdir "$output_dir"
 
 for folder in $list
 do
-	foldername=$(basename "$folder")
 	ms_tif=$(find "$folder" -name "*ORT_MS*.TIF")
 	p_tif=$(find "$folder" -name "*ORT_P*.TIF")
 
-	echo "${p_tif[0]}"
-	echo "${ms_tif[0]}"
-	
-	basename_tif=$(basename "${p_tif[0]}")
-	mkdir "$output_dir/$foldername"
+	echo "Panchromatic: ${p_tif[0]}"
+	echo "Multispectral: ${ms_tif[0]}"
 
-	gdal_pansharpen.py "${p_tif[0]}" "${ms_tif[0]}" "$output_dir/$foldername/$basename_tif"
+	basename_tif=$(basename "${p_tif[0]}")
+	echo "Storing result in $output_dir/$basename_tif"
+	echo " "
+
+	gdal_pansharpen.py "${p_tif[0]}" "${ms_tif[0]}" "$output_dir/$basename_tif"
 done
