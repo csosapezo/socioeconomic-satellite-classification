@@ -38,8 +38,6 @@ def get_roof_segmentation_mask(labels_dict, image_shape, image_transform):
     for _, labels in labels_dict.items():
         geometries += labels
 
-    print(geometries)
-
     if geometries:
         mask = geometry_mask(geometries, image_shape, image_transform, all_touched=True, invert=True)
     else:
