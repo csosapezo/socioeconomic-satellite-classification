@@ -1,6 +1,11 @@
-# cropped patches shape
+# cropped patches
 width = 256
 height = 256
+patch_suffix = "_subtile_{}-{}"
+roof_suffix = "_ROOF_MASK"
+income_suffix = "_INCOME_MASK"
+dot_tif = ".tif"
+dot_npy = ".npy"
 
 # cropped patches zero sum percentage
 max_equals0 = 0.005
@@ -17,9 +22,11 @@ polygon_format = 'POLYGON(({0} {1}, {0} {2}, {3} {1}, {3} {2}, {0} {1}))'
 # SQL Query
 database_file = 'planos.sqlite'
 select = 'select ESTRATO, AsText(GeometryN(GeomFromWKB(GEOMETRY),1))'
-from_ = 'from planos'
+from_ = 'from planos '
 where = 'where ST_Intersects(GeomFromText("{}"), GeometryN(GeomFromWKB(GEOMETRY),1)) = 1;'
 query = select + ' ' + from_ + '' + where
+distinct = 'select distinct ESTRATO'
+distinct_query = distinct + ' ' + from_
 
 # Query result structure
 income_level = 0

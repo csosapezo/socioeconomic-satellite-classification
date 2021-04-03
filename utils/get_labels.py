@@ -38,6 +38,26 @@ def search_labels(bounds, database_filename):
     return raw_labels
 
 
+def get_levels(database_filename):
+    connection = sqlite3.connect(database_filename)
+    connection.enable_load_extension(True)
+
+    try:
+        connection.execute('SELECT load_extension("mod_spatialite")')  # Ubuntu 20.04 LTS
+    except sqlite3.OperationalError:
+        connection.execute('SELECT load_extension("mod_spatialite.so")')  # Ubuntu 18.04 LTS
+
+    connection.execute('SELECT InitSpatialMetaData(1);')
+    levels = connection.execute(utils.constants.distinct_query)
+
+    level_dict = {}
+
+    for idx, level in enumerate(levels):
+        level_dict[str(level[0])] = idx
+
+    return level_dict
+
+
 def build_polygon_dict(geometry, metadata):
     data_ini_index = geometry.rfind(utils.constants.polygon_format_left) + 1
     data_end_index = geometry.find(utils.constants.polygon_format_right)
@@ -67,7 +87,7 @@ def extract_labels(raw_labels, metadata):
 
     for label in raw_labels:
         processed_label = build_polygon_dict(label[utils.constants.geometry], metadata)
-        income_level = labels[utils.constants.income_level]
+        income_level = str(labels[utils.constants.income_level])
 
         if income_level in labels:
             labels[income_level].append(processed_label)

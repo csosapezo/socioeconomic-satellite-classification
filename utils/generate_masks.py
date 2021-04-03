@@ -1,28 +1,77 @@
+import logging
 import os
-import sqlite3
+import pickle
 from itertools import product
 
-import fiona
 import matplotlib.pyplot as plt
 import numpy as np
 import rasterio
-import pickle
 from rasterio import windows
-from pyproj import Transformer
-
 from rasterio.features import geometry_mask
 
 import utils.constants
+import utils.get_labels
 
-"""def convert_geojson_to_numpy_array_mask(geojson_path, image_shape, image_transform):
-    
-    with fiona.open(geojson_path) as f:
-        geojson = [roof_data['geometry'] for roof_data in f]
+logger = logging.getLogger('root')
+FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
+logging.basicConfig(format=FORMAT)
+logger.setLevel(logging.DEBUG)
 
-    if not geojson:
-        return np.zeros(image_shape)
 
-    return geometry_mask(geojson, image_shape, image_transform, all_touched=True, invert=True)"""
+def get_roof_segmentation_mask(labels_dict, image_shape, image_transform):
+    """
+    Generate a roof segmentation mask from a dictionary of geometries
+
+    :param labels_dict: labels dictionary
+    :type labels_dict: dict
+
+    :param image_shape: satellite image patch shape
+    :type image_shape: tuple
+
+    :param image_transform: satellite image patch affine transform
+    :type image_transform: any
+
+    """
+
+    geometries = []
+
+    for _, labels in labels_dict.items():
+        geometries += labels
+
+    print(geometries)
+
+    if geometries:
+        mask = geometry_mask(geometries, image_shape, image_transform, all_touched=True, invert=True)
+    else:
+        mask = np.ndarray(image_shape)
+
+    return mask
+
+
+def get_income_level_segmentation_mask(labels_dict, levels, image_shape, image_transform):
+    """
+    Generate a roof segmentation mask from a dictionary of geometries
+
+    :param labels_dict: labels dictionary
+    :type labels_dict: dict
+
+    :param levels: levels - mask index dictionary
+    :type levels: dict
+
+    :param image_shape: satellite image patch shape
+    :type image_shape: tuple
+
+    :param image_transform: satellite image patch affine transform
+    :type image_transform: any
+
+    """
+
+    mask = np.ndarray((len(levels),))
+
+    for level, labels in labels_dict.items():
+        mask[levels[level]] = geometry_mask(labels, image_shape, image_transform) if labels else np.ndarray(image_shape)
+
+    return mask
 
 
 def plot_mask(mask):
@@ -54,63 +103,71 @@ def get_tiles(dataset, width=utils.constants.width, height=utils.constants.heigh
         yield window, transform
 
 
-def split_images_and_generate_masks(image_directory_path, geojson_directory_path, image_names,
-                                    geojson_names, output_path):
+def split_images_and_generate_masks(images, database_path, output_path):
     """
         Create and save masks from geoJSON files.
         Implementation adapted from https://github.com/jesseniagonzalezv/App_segmentation_water_bodies
 
-        :param image_directory_path: path in which satellite images are located
-        :type image_directory_path: str
+        :param images: path in which satellite images are located
+        :type images: str
 
-        :param geojson_directory_path: path in which geojson files are located
-        :type geojson_directory_path: str
-
-        :param image_names: images names list
-        :type image_names: list[str]
-
-        :param geojson_names: geojson files names list
-        :type geojson_names: list[str]
+        :param database_path: path in which the SQLite file is located
+        :type database_path: str
 
         :param output_path: path in which mask are saved
         :type output_path: str
         """
 
-    # TODO 01: Update code to work with SQLite databases instead of geoJSONs
+    labels_output = os.path.join(output_path, "labels")
+    split_output = os.path.join(output_path, "split")
 
-    for idx in range(len(image_names)):
-        print("GeoJSON file: {}".format(geojson_names[idx]))
-        geojson_filepath = os.path.join(geojson_directory_path, geojson_names[idx])
-        image_filepath = os.path.join(image_directory_path, image_names[idx])
+    logger.debug("Mask output: {}".format(labels_output))
+    logger.debug("Patches output: {}".format(split_output))
 
-        if not os.path.exists(os.path.join(output_path, "labels")):
-            os.mkdir(os.path.join(output_path, "labels"))
+    if not os.path.exists(labels_output):
+        os.mkdir(labels_output)
 
-        if not os.path.exists(os.path.join(output_path, "split")):
-            os.mkdir(os.path.join(output_path, "split"))
+    if not os.path.exists(split_output):
+        os.mkdir(split_output)
 
-        dot = image_names[idx].rfind(".")
-        output_filename = image_names[idx][:dot] + "_subtile_{}-{}.tif"
+    levels = utils.get_levels(database_path)
 
-        with rasterio.open(image_filepath) as dataset:
+    logger.debug("Income level names: {}".format(",".join(levels)))
+
+    for image in images:
+
+        image_basename = os.path.basename(image)
+        dot = image_basename.rfind(".")
+        output_basename = image_basename[:dot] + utils.constants.patch_suffix
+
+        with rasterio.open(image) as dataset:
 
             meta = dataset.meta.copy()
 
             for window, transform in get_tiles(dataset):
+
                 meta['transform'] = transform
                 meta['width'], meta['height'] = window.width, window.height
 
-                output_name = output_filename.format(int(window.col_off), int(window.row_off))
-                patch_output_filepath = os.path.join(output_path, "split", output_name)
+                output_basename = output_basename.format(int(window.col_off), int(window.row_off))
+                patch_output_filepath = os.path.join(split_output, output_basename + utils.constants.dot_tif)
+                logger.debug("Patch filename: {}".format(patch_output_filepath))
 
-                # TODO 01.1: Replace convert_geojson_to_numpy_array_mask function
-                # mask = convert_geojson_to_numpy_array_mask(geojson_filepath, (window.width, window.height),
-                #                                           transform)
-                # print(mask.max())
-                dot = output_name.rfind(".")
-                name = output_name[:dot] + ".npy"
+                labels_dict = utils.get_labels(meta, database_path)
 
-                # print("Saved label: {}".format(os.path.join(output_path, "labels", name))
+                labels_msg = "Amount of labels: {}"\
+                    .format(len([label for labels_group in list(labels_dict.values()) for label in labels_group]))
+                logger.debug(labels_msg)
+
+                roof_mask = get_roof_segmentation_mask(labels_dict, (meta['width'], meta['height']), meta['transform'])
+                income_mask = get_income_level_segmentation_mask(labels_dict, levels,
+                                                                 (meta['width'], meta['height']), meta['transform'])
+
+                roof_mask_path = os.path.join(labels_output,
+                                              output_basename + utils.constants.roof_suffix + utils.constants.dot_npy)
+                income_mask_path = os.path.join(labels_output,
+                                                output_basename +
+                                                utils.constants.income_suffix + utils.constants.dot_npy)
 
                 with rasterio.open(patch_output_filepath, 'w', **meta) as outds:
                     # print("Saved patch: {}".format(patch_output_filepath))
@@ -119,9 +176,13 @@ def split_images_and_generate_masks(image_directory_path, geojson_directory_path
                     equals0 = (sum_channels == 0).astype(np.uint8)
                     sum_percent = np.sum(equals0) / (window.width * window.height)
 
+                    outds.write(patch_array)
+
+                    logger.debug("Sum percert: {}".format(sum_percent))
+
                     if sum_percent <= utils.constants.max_equals0 \
                             and (meta['width'] == utils.constants.width) and (meta['height'] == utils.constants.height):
-                        outds.write(patch_array)
-                        # pickle.dump(mask, open(str(os.path.join(output_path, "labels", name)), "wb"))
+                        pickle.dump(income_mask, open(str(income_mask_path), "wb"))
+                        pickle.dump(roof_mask, open(str(roof_mask_path), "wb"))
                     else:
                         os.remove(patch_output_filepath)
