@@ -147,8 +147,9 @@ def split_images_and_generate_masks(images, database_path, output_path):
                 meta['transform'] = transform
                 meta['width'], meta['height'] = window.width, window.height
 
-                output_basename = output_basename.format(int(window.col_off), int(window.row_off))
-                patch_output_filepath = os.path.join(split_output, output_basename + utils.constants.dot_tif)
+                patch_output_filepath = os.path.join(split_output,
+                                                     output_basename.format(int(window.col_off), int(window.row_off))
+                                                     + utils.constants.dot_tif)
                 logger.debug("Patch filename: {}".format(patch_output_filepath))
 
                 labels_dict = utils.get_labels(meta, database_path)
@@ -162,9 +163,11 @@ def split_images_and_generate_masks(images, database_path, output_path):
                                                                  (meta['width'], meta['height']), meta['transform'])
 
                 roof_mask_path = os.path.join(labels_output,
-                                              output_basename + utils.constants.roof_suffix + utils.constants.dot_npy)
+                                              output_basename.format(int(window.col_off), int(window.row_off))
+                                                                     + utils.constants.roof_suffix
+                                                                     + utils.constants.dot_npy)
                 income_mask_path = os.path.join(labels_output,
-                                                output_basename +
+                                                output_basename.format(int(window.col_off), int(window.row_off)) +
                                                 utils.constants.income_suffix + utils.constants.dot_npy)
 
                 with rasterio.open(patch_output_filepath, 'w', **meta) as outds:
