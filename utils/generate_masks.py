@@ -154,7 +154,7 @@ def split_images_and_generate_masks(images, database_path, output_path):
                                                      + utils.constants.dot_tif)
                 logger.debug("Patch filename: {}".format(patch_output_filepath))
 
-                labels_dict, num_labels = utils.get_labels(meta, database_path, image_basename)
+                labels_dict, num_labels = utils.get_labels(meta, image_basename, database_path)
 
                 logger.debug("Amount of labels: {}".format(num_labels))
 
