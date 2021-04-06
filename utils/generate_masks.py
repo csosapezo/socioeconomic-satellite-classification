@@ -173,7 +173,6 @@ def split_images_and_generate_masks(images, database_path, output_path):
                 with rasterio.open(patch_output_filepath, 'w', **meta) as outds:
                     patch_array = dataset.read(window=window)
 
-                    patch_array = dataset.read(window=window)
                     sum_channels = np.sum(patch_array, axis=0)
                     equals0 = (sum_channels == 0).astype(np.uint8)
                     sum_percent = np.sum(equals0) / (window.width * window.height)
