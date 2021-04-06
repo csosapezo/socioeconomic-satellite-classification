@@ -38,8 +38,6 @@ def get_roof_segmentation_mask(labels_dict, image_shape, image_transform):
     for _, labels in labels_dict.items():
         geometries += labels
 
-    print(geometries)
-
     if geometries:
         mask = geometry_mask(geometries, image_shape, image_transform, all_touched=True, invert=True)
     else:
@@ -69,7 +67,8 @@ def get_income_level_segmentation_mask(labels_dict, levels, image_shape, image_t
     mask = np.ndarray((len(levels), image_shape[0], image_shape[1]))
 
     for level, labels in labels_dict.items():
-        mask[levels[level]] = geometry_mask(labels, image_shape, image_transform) if labels else np.ndarray(image_shape)
+        mask[levels[level]] = geometry_mask(labels, image_shape, image_transform, all_touched=True, invert=True)\
+            if labels else np.ndarray(image_shape)
 
     return mask
 
@@ -188,3 +187,5 @@ def split_images_and_generate_masks(images, database_path, output_path):
 
                         outds.write(patch_array)
                         logger.debug("Patch saved.")
+                    else:
+                        os.remove(patch_output_filepath)
