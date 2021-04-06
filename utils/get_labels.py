@@ -33,7 +33,6 @@ def search_labels(bounds, database_filename):
     connection.execute('SELECT InitSpatialMetaData(1);')
 
     query = utils.constants.query.format(bounds)
-    print(database_filename)
     raw_labels = connection.execute(query).fetchall()
 
     return raw_labels
