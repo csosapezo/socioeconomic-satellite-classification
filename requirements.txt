@@ -5,7 +5,6 @@ click==7.1.2
 click-plugins==1.1.1
 cligj==0.5.0
 cycler==0.10.0
-Fiona==1.8.14
 future==0.18.2
 helper==2.4.2
 kiwisolver==1.2.0
@@ -15,6 +14,7 @@ numpy==1.19.1
 opencv-python==4.4.0.42
 Pillow==7.2.0
 pyparsing==2.4.7
+pyproj==3.0.1
 python-dateutil==2.8.1
 PyYAML==5.3.1
 rasterio==1.1.5
@@ -23,5 +23,3 @@ snuggs==1.4.7
 tifffile==2020.9.30
 torch==1.6.0
 torchvision==0.7.0
-pyproj~=3.0.1
-argparse~=1.4.0

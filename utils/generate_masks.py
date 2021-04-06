@@ -38,6 +38,8 @@ def get_roof_segmentation_mask(labels_dict, image_shape, image_transform):
     for _, labels in labels_dict.items():
         geometries += labels
 
+    print(geometries)
+
     if geometries:
         mask = geometry_mask(geometries, image_shape, image_transform, all_touched=True, invert=True)
     else:
@@ -64,7 +66,7 @@ def get_income_level_segmentation_mask(labels_dict, levels, image_shape, image_t
 
     """
 
-    mask = np.ndarray((len(levels),))
+    mask = np.ndarray((len(levels), image_shape[0], image_shape[1]))
 
     for level, labels in labels_dict.items():
         mask[levels[level]] = geometry_mask(labels, image_shape, image_transform) if labels else np.ndarray(image_shape)
@@ -152,11 +154,9 @@ def split_images_and_generate_masks(images, database_path, output_path):
                                                      + utils.constants.dot_tif)
                 logger.debug("Patch filename: {}".format(patch_output_filepath))
 
-                labels_dict = utils.get_labels(meta, database_path)
+                labels_dict, num_labels = utils.get_labels(meta, database_path, image_basename)
 
-                labels_msg = "Amount of labels: {}"\
-                    .format(len([label for labels_group in list(labels_dict.values()) for label in labels_group]))
-                logger.debug(labels_msg)
+                logger.debug("Amount of labels: {}".format(num_labels))
 
                 roof_mask = get_roof_segmentation_mask(labels_dict, (meta['width'], meta['height']), meta['transform'])
                 income_mask = get_income_level_segmentation_mask(labels_dict, levels,
@@ -164,26 +164,23 @@ def split_images_and_generate_masks(images, database_path, output_path):
 
                 roof_mask_path = os.path.join(labels_output,
                                               output_basename.format(int(window.col_off), int(window.row_off))
-                                                                     + utils.constants.roof_suffix
-                                                                     + utils.constants.dot_npy)
+                                              + utils.constants.roof_suffix
+                                              + utils.constants.dot_npy)
                 income_mask_path = os.path.join(labels_output,
                                                 output_basename.format(int(window.col_off), int(window.row_off)) +
                                                 utils.constants.income_suffix + utils.constants.dot_npy)
 
                 with rasterio.open(patch_output_filepath, 'w', **meta) as outds:
-                    # print("Saved patch: {}".format(patch_output_filepath))
                     patch_array = dataset.read(window=window)
-                    sum_channels = np.sum(patch_array, axis=0)
-                    equals0 = (sum_channels == 0).astype(np.uint8)
-                    sum_percent = np.sum(equals0) / (window.width * window.height)
 
-                    outds.write(patch_array)
-
-                    logger.debug("Sum percert: {}".format(sum_percent))
-
-                    if sum_percent <= utils.constants.max_equals0 \
+                    if num_labels \
                             and (meta['width'] == utils.constants.width) and (meta['height'] == utils.constants.height):
+
                         pickle.dump(income_mask, open(str(income_mask_path), "wb"))
+                        logger.debug("Income level mask saved at {}".format(str(income_mask_path)))
+
                         pickle.dump(roof_mask, open(str(roof_mask_path), "wb"))
-                    else:
-                        os.remove(patch_output_filepath)
+                        logger.debug("Roof mask saved at {}".format(str(roof_mask_path)))
+
+                        outds.write(patch_array)
+                        logger.debug("Patch saved.")

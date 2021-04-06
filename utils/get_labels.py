@@ -18,7 +18,7 @@ def get_bounds(metadata):
     left, bottom = transformer.transform(x_ini, y_ini)
     right, top = transformer.transform(x_fin, y_fin)
 
-    return utils.constants.polygon_format.format(left, bottom, top, right)
+    return utils.constants.polygon_format.format(bottom, right, left, top)
 
 
 def search_labels(bounds, database_filename):
@@ -58,13 +58,13 @@ def get_levels(database_filename):
     return level_dict
 
 
-def build_polygon_dict(geometry, metadata):
+def build_polygon_dict(geometry, metadata, basename):
     data_ini_index = geometry.rfind(utils.constants.polygon_format_left) + 1
     data_end_index = geometry.find(utils.constants.polygon_format_right)
     geometry = geometry[data_ini_index:data_end_index]
 
     raw_coordinates_list = geometry.split(sep=utils.constants.point_splitter)
-    geometry_dict = {"type": "polygon", "coordinates": []}
+    geometry_dict = {"type": "Polygon", "coordinates": []}
     coordinates_list = []
 
     for raw_coord in raw_coordinates_list:
@@ -72,8 +72,8 @@ def build_polygon_dict(geometry, metadata):
         coord = [float(i) for i in string_coord]
 
         transformer = Transformer.from_crs(utils.constants.crs_lonlat, metadata['crs'])
-        x, y = transformer.transform(coord[0], coord[1])
-        coord = [x, y]
+        x, y = transformer.transform(coord[1], coord[0])
+        coord = [x + utils.constants.offset_values[basename][0], y + utils.constants.offset_values[basename][1]]
 
         coordinates_list.append(coord)
 
@@ -82,12 +82,12 @@ def build_polygon_dict(geometry, metadata):
     return geometry_dict
 
 
-def extract_labels(raw_labels, metadata):
+def extract_labels(raw_labels, metadata, basename):
     labels = {}
 
     for label in raw_labels:
-        processed_label = build_polygon_dict(label[utils.constants.geometry], metadata)
-        income_level = str(labels[utils.constants.income_level])
+        processed_label = build_polygon_dict(label[utils.constants.geometry], metadata, basename)
+        income_level = str(label[utils.constants.income_level])
 
         if income_level in labels:
             labels[income_level].append(processed_label)
@@ -98,9 +98,9 @@ def extract_labels(raw_labels, metadata):
     return labels
 
 
-def get_labels(metadata, database_filename):
+def get_labels(metadata, basename, database_filename):
     bounds = get_bounds(metadata)
     raw_labels = search_labels(bounds, database_filename)
-    labels = extract_labels(raw_labels, metadata)
+    labels = extract_labels(raw_labels, metadata, basename)
 
-    return labels
+    return labels, len(raw_labels)
