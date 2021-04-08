@@ -11,7 +11,6 @@ dot_npy = ".npy"
 max_equals0 = 0.005
 
 # Training values
-train_val_split = 0.25
 pixel_max_value = 3512
 num_channel = 4
 

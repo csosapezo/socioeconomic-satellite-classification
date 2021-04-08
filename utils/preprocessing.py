@@ -18,12 +18,11 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 class MeanStdDataset(Dataset):
-    def __init__(self, root, tform=None, imgloader=tifffile.imread):
+    def __init__(self, files, tform=None, imgloader=tifffile.imread):
         # el contructor, se envia el dataset, trasfor, cargador de imagenes
         super(MeanStdDataset, self).__init__()
 
-        self.root = root
-        self.filenames = sorted(glob.glob(root + "/*.tif"))
+        self.filenames = files
         self.tform = tform
         self.imgloader = imgloader
 
@@ -70,33 +69,40 @@ def save_rasters_as_ndarrays(images_directory_path, image_names, output_path):
     return np_image_names
 
 
-def train_val_split(dataset, split_percent):
+def train_val_test_split(dataset_size, val_percent, test_percent):
     """
     Split a dataset in train and validation subset
 
-    :param dataset: List of elements of a dataset
-    :type dataset: list
+    :param dataset_size: dataset size
+    :type dataset_size: int
 
-    :param split_percent: percentage of the dataset assigned to the validation subset
-    :type split_percent: float
+    :param val_percent: percentage of the dataset assigned to the validation subset
+    :type val_percent: float
+
+    :param test_percent: percentage of the dataset assigned to the test subset
+    :type test_percent: float
 
 
     :return: train and validation subset indices
-    :rtype: (list[int], list[int])
+    :rtype: (list[int], list[int], list[int])
     """
 
-    dataset_size = len(dataset)
+    np.random.seed(0)
 
     indices = np.random.permutation(np.arange(dataset_size))
-    val_size = int(split_percent * dataset_size)
+    val_size = int(val_percent * dataset_size)
+    test_size = int(test_percent * dataset_size)
 
-    train_set_indices = indices[val_size:]
+    train_start = val_size + test_size
+
     val_set_indices = indices[:val_size]
+    test_set_indices = indices[val_size:train_start]
+    train_set_indices = indices[train_start:]
 
-    return train_set_indices, val_set_indices
+    return train_set_indices, val_set_indices, test_set_indices
 
 
-def find_max(directory_path, image_filenames):
+def find_max(image_filenames):
     """
     Adapted from https://github.com/jesseniagonzalezv/App_segmentation_water_bodies/
     """
@@ -105,7 +111,7 @@ def find_max(directory_path, image_filenames):
     size = len(image_filenames)
 
     for filename in image_filenames:
-        with rasterio.open(str(os.path.join(directory_path, filename))) as dataset:
+        with rasterio.open(filename) as dataset:
             img = dataset.read()
 
             img = img.transpose((1, 2, 0))
@@ -116,13 +122,13 @@ def find_max(directory_path, image_filenames):
     return np.min(min_pixel), np.max(max_pixel), size
 
 
-def mean_std(directory_path, image_filenames):
+def mean_std(image_filenames):
     """
     Implementation from Media_Desviacionstd_tifv2
     """
-    min_pixel_all, max_pixel_all, size_all = find_max(directory_path, image_filenames)
+    min_pixel_all, max_pixel_all, size_all = find_max(image_filenames)
 
-    doc_train_dataset = MeanStdDataset(root=directory_path, tform=T.Compose([T.ToTensor()]))
+    doc_train_dataset = MeanStdDataset(files=image_filenames, tform=T.Compose([T.ToTensor()]))
 
     loader_med_sd = DataLoader(
         doc_train_dataset,

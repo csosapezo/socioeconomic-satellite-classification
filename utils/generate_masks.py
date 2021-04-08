@@ -67,7 +67,7 @@ def get_income_level_segmentation_mask(labels_dict, levels, image_shape, image_t
     mask = np.ndarray((len(levels), image_shape[0], image_shape[1]))
 
     for level, labels in labels_dict.items():
-        mask[levels[level]] = geometry_mask(labels, image_shape, image_transform, all_touched=True, invert=True)\
+        mask[levels[level]] = geometry_mask(labels, image_shape, image_transform, all_touched=True, invert=True) \
             if labels else np.ndarray(image_shape)
 
     return mask
@@ -118,6 +118,9 @@ def split_images_and_generate_masks(images, database_path, output_path):
         """
 
     labels_output = os.path.join(output_path, "labels")
+    labels_roof_output = os.path.join(labels_output, "roof")
+    labels_income_output = os.path.join(labels_output, "income")
+
     split_output = os.path.join(output_path, "split")
 
     logger.debug("Mask output: {}".format(labels_output))
@@ -125,6 +128,12 @@ def split_images_and_generate_masks(images, database_path, output_path):
 
     if not os.path.exists(labels_output):
         os.mkdir(labels_output)
+
+    if not os.path.exists(labels_roof_output):
+        os.mkdir(labels_roof_output)
+
+    if not os.path.exists(labels_income_output):
+        os.mkdir(labels_income_output)
 
     if not os.path.exists(split_output):
         os.mkdir(split_output)
@@ -161,13 +170,12 @@ def split_images_and_generate_masks(images, database_path, output_path):
                 income_mask = get_income_level_segmentation_mask(labels_dict, levels,
                                                                  (meta['width'], meta['height']), meta['transform'])
 
-                roof_mask_path = os.path.join(labels_output,
+                roof_mask_path = os.path.join(labels_roof_output,
                                               output_basename.format(int(window.col_off), int(window.row_off))
-                                              + utils.constants.roof_suffix
                                               + utils.constants.dot_npy)
-                income_mask_path = os.path.join(labels_output,
-                                                output_basename.format(int(window.col_off), int(window.row_off)) +
-                                                utils.constants.income_suffix + utils.constants.dot_npy)
+                income_mask_path = os.path.join(labels_income_output,
+                                                output_basename.format(int(window.col_off), int(window.row_off))
+                                                + utils.constants.dot_npy)
 
                 with rasterio.open(patch_output_filepath, 'w', **meta) as outds:
                     patch_array = dataset.read(window=window)
