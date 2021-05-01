@@ -4,7 +4,6 @@ from torch.nn import functional as F
 from torchvision import models
 
 
-# ----------------------------------------------------------------------------
 def conv3x3(in_, out):
     return nn.Conv2d(in_, out, 3, padding=1)
 
