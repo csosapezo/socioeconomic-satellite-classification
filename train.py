@@ -41,7 +41,7 @@ def train():
     args = parser.parse_args()
 
     # TODO determine if different model architectures are needed for each task
-    model = models.UNet()
+    model = models.UNet11()
 
     if torch.cuda.is_available():
         if args.device_ids:
