@@ -40,8 +40,12 @@ def train():
 
     args = parser.parse_args()
 
-    # TODO determine if different model architectures are needed for each task
-    model = models.UNet11()
+    if args.model == "ROOF":
+        model = models.UNet11(pretrained=True)
+    elif args.model == "INCOME":
+        model = models.UNet11(pretrained=True, num_classes=5, input_channels=5)
+    else:
+        raise ValueError
 
     if torch.cuda.is_available():
         if args.device_ids:
