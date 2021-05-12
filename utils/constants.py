@@ -1,6 +1,6 @@
 # cropped patches
-width = 256
-height = 256
+width = 512
+height = 512
 patch_suffix = "_subtile_{}-{}"
 roof_suffix = "_ROOF_MASK"
 income_suffix = "_INCOME_MASK"
