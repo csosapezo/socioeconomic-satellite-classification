@@ -36,7 +36,7 @@ def train():
     arg('--n-epochs', type=int, default=500)
     arg('--lr', type=float, default=1e-3)
     arg('--model', type=str, help='roof: roof segmentation / income: income determination')
-    arg('--out-path', type=str, default='./models/', help='model output path')
+    arg('--out-path', type=str, default='./trained_models/', help='model output path')
 
     # CUDA devices
     arg('--device-ids', type=str, default='0,1', help='For example 0,1 to run on two GPUs')
