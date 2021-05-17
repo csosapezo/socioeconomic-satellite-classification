@@ -44,7 +44,7 @@ def train():
     args = parser.parse_args()
 
     if args.model == "roof":
-        model = models.UNet11()
+        model = models.UNet11(pretrained=True)
     elif args.model == "income":
         model = models.UNet11(pretrained=True, num_classes=5, input_channels=5)
     else:
