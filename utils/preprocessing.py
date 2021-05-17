@@ -153,14 +153,14 @@ def mean_std(image_filenames):
     return max_pixel_all, mean.numpy(), std.numpy()
 
 
-def fill_zeros(images_path, image_file_names, output_path, mean):
+def fill_zeros(image_file_names, output_path, mean):
     np_image_names = []
 
     if not os.path.exists(output_path):
         os.mkdir(output_path)
 
     for name in image_file_names:
-        with rasterio.open(str(os.path.join(images_path, name))) as dataset:
+        with rasterio.open(name) as dataset:
             raster = dataset.read()
 
             raster[0][:][raster[0][:] == 0] = mean[0]
@@ -169,10 +169,10 @@ def fill_zeros(images_path, image_file_names, output_path, mean):
             raster[3][:][raster[0][:] == 0] = mean[3]
 
             dot = name.rfind(".")
-            np_name = name[:dot] + ".npy"
+            np_name = str(os.path.join(output_path, name[:dot] + ".npy"))
             np_image_names.append(np_name)
 
-            pickle.dump(raster, open(str(os.path.join(output_path, np_name)), "wb"))
+            pickle.dump(raster, open(np_name, "wb"))
 
     return np_image_names
 

@@ -14,15 +14,15 @@ else:
     print('CUDA is available!  Training on GPU ...')
 
 
-def train_model(name_file, model, optimizer, scheduler, dataloaders, name_model, num_epochs=25):
-
+def train_model(name_file, model, optimizer, scheduler, dataloaders, name_model='UNet11', num_epochs=25):
+    hist_lst = []
     best_model_wts = copy.deepcopy(model.state_dict())
     best_loss = 1e10
 
-    if not os.path.exists("./history/"):
-        os.mkdir("./history/")
+    if not os.path.exists("history"):
+        os.mkdir("history")
 
-    f = open("./history/history_model{}_{}_{}epochs.txt".format(name_file, name_model, num_epochs), "w+")
+    f = open("history/history_model{}_{}_{}epochs.txt".format(name_file, name_model, num_epochs), "w+")
 
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))

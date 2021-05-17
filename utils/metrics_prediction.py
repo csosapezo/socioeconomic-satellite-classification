@@ -49,30 +49,53 @@ def print_metrics(metrics, file, phase='train', epoch_samples=1):
         file.write("{}: {}".format(phase, ", ".join(outputs)))
 
 
-def find_metrics(images_path, mask_path, train_set_images, train_set_labels, val_set_images, val_set_labels,
-                 mean_values, std_values, model, name_model='UNet11', epochs=40):
+def find_metrics(train_file_names, val_file_names, test_file_names, mask_dir, dataset, mean_values, std_values, model,
+                 fold_out='0', fold_in='0', name_model='UNet11', epochs='40', out_file='VHR', dataset_file='VHR',
+                 name_file='_VHR_60_fake'):
+    outfile_path = 'predictions/{}/'.format(out_file)
 
-    if not os.path.exists("predictions/"):
-        os.mkdir("predictions/")
-
-    f = open("predictions/metric_{}_{}_epochs.txt".format(name_model, epochs), "w+")
-    f2 = open("predictions/pred_loss_test{}_{}_epochs.txt".format(name_model, epochs), "w+")
+    f = open(
+        "predictions/{}/metric{}_{}_foldout{}_foldin{}_{}epochs.txt".format(out_file, name_file, name_model, fold_out,
+                                                                            fold_in, epochs), "w+")
+    f2 = open(
+        "predictions/{}/pred_loss_test{}_{}_foldout{}_foldin{}_{}epochs.txt".format(out_file, name_file, name_model,
+                                                                                    fold_out, fold_in, epochs), "w+")
     f.write("Training mean_values:[{}], std_values:[{}] \n".format(mean_values, std_values))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+    print(len(test_file_names))
+
     all_transform = DualCompose([
-        CenterCrop(utils.constants.height),
+        CenterCrop(int(dataset_file)),
         ImageOnly(Normalize(mean=mean_values, std=std_values))
     ])
 
-    train_loader = make_loader(images_path, mask_path, train_set_images, train_set_labels, False, all_transform)
-    val_loader = make_loader(images_path, mask_path, val_set_images, val_set_labels, False, all_transform)
+    train_loader = utils.make_loader(filenames=train_file_names,
+                                     mask_dir=mask_dir,
+                                     dataset=dataset,
+                                     shuffle=False,
+                                     transform=all_transform,
+                                     mode='train')
+
+    val_loader = utils.make_loader(filenames=val_file_names,
+                                   mask_dir=mask_dir,
+                                   dataset=dataset,
+                                   shuffle=False,
+                                   transform=all_transform,
+                                   mode='val')
+
+    test_loader = utils.make_loader(filenames=test_file_names,
+                                    mask_dir=mask_dir,
+                                    dataset=dataset,
+                                    shuffle=False,
+                                    transform=all_transform,
+                                    mode='test')
 
     dataloaders = {
-        'train': train_loader, 'val': val_loader}
+        'train': train_loader, 'val': val_loader, 'test': test_loader}
 
-    for phase in ['train', 'val']:
+    for phase in ['train', 'val', 'test']:
         model.eval()
         metrics = defaultdict(float)
 
@@ -93,7 +116,8 @@ def find_metrics(images_path, mask_path, train_set_images, train_set_labels, val
 
                 loss = calc_loss(pred, labels, metrics, 'test')
 
-                print_metrics(metrics, f2, 'test')
+                if phase == 'test':
+                    print_metrics(metrics, f2, 'test')
 
                 pred = torch.sigmoid(pred)
                 pred_vec.append(pred.data.cpu().numpy())
@@ -104,10 +128,30 @@ def find_metrics(images_path, mask_path, train_set_images, train_set_labels, val
 
                 count_img += 1
 
-        print(phase)
+        print("{}_{}".format(phase, out_file))
         print('Dice = ', np.mean(result_dice), np.std(result_dice))
         print('Jaccard = ', np.mean(result_jaccard), np.std(result_jaccard), '\n')
 
-        f.write(phase)
+        f.write("{}_{}\n".format(phase, out_file))
         f.write("dice_metric: {:4f}, std: {:4f} \n".format(np.mean(result_dice), np.std(result_dice)))
         f.write("jaccard_metric: {:4f}, std: {:4f}  \n".format(np.mean(result_jaccard), np.std(result_jaccard)))
+
+        if phase == 'test':
+            np.save(str(os.path.join(outfile_path,
+                                     "inputs_test{}_{}_foldout{}_foldin{}_{}epochs_{}.npy".format(name_file, name_model,
+                                                                                                  fold_out, fold_in,
+                                                                                                  epochs,
+                                                                                                  int(count_img)))),
+                    np.array(input_vec))
+            np.save(str(os.path.join(outfile_path,
+                                     "labels_test{}_{}_foldout{}_foldin{}_{}epochs_{}.npy".format(name_file, name_model,
+                                                                                                  fold_out, fold_in,
+                                                                                                  epochs,
+                                                                                                  int(count_img)))),
+                    np.array(labels_vec))
+            np.save(str(os.path.join(outfile_path,
+                                     "pred_test{}_{}_foldout{}_foldin{}_{}epochs_{}.npy".format(name_file, name_model,
+                                                                                                fold_out, fold_in,
+                                                                                                epochs,
+                                                                                                int(count_img)))),
+                    np.array(pred_vec))

@@ -7,6 +7,7 @@ import numpy as np
 
 import models
 import utils
+from utils.metrics_prediction import find_metrics
 from utils.transform import DualCompose, CenterCrop, HorizontalFlip, VerticalFlip, Rotate, ImageOnly, Normalize
 
 
@@ -22,6 +23,7 @@ def train():
     # image-related variables
     arg('--image-patches-dir', type=str, default='./data/dataset/split', help='satellite image patches directory')
     arg('--masks-dir', type=str, default='./data/dataset/labels', help='numPy masks directory')
+    arg('--npy-dir', type=str, default='./data/dataset/split_npy', help='numPy preprocessed patches directory')
     arg('--train-dir', type=str, default='./data/train/', help='train sample directory')
 
     # preprocessing-related variables
@@ -33,16 +35,17 @@ def train():
     arg('--limit', type=int, default=10000, help='number of images in epoch')
     arg('--n-epochs', type=int, default=500)
     arg('--lr', type=float, default=1e-3)
-    arg('--model', type=str, help='ROOF: roof segmentation / INCOME: income determination')
+    arg('--model', type=str, help='roof: roof segmentation / income: income determination')
+    arg('--out-path', type=str, default='./models/', help='model output path')
 
     # CUDA devices
-    arg('--device-ids', type=str, default='0', help='For example 0,1 to run on two GPUs')
+    arg('--device-ids', type=str, default='0,1', help='For example 0,1 to run on two GPUs')
 
     args = parser.parse_args()
 
-    if args.model == "ROOF":
+    if args.model == "roof":
         model = models.UNet11(pretrained=True)
-    elif args.model == "INCOME":
+    elif args.model == "income":
         model = models.UNet11(pretrained=True, num_classes=5, input_channels=5)
     else:
         raise ValueError
@@ -64,7 +67,7 @@ def train():
 
     max_value, mean_train, std_train = utils.mean_std(images_filenames[train_set_indices])
 
-    # TODO fill blanks on patches and save numPy files
+    images_np_filenames = utils.fill_zeros(images_filenames, args.npy_dir, mean_train)
 
     train_transform = DualCompose([
         CenterCrop(utils.constants.height),
@@ -78,6 +81,58 @@ def train():
         CenterCrop(utils.constants.height),
         ImageOnly(Normalize(mean=mean_train, std=std_train))
     ])
+
+    train_loader = utils.make_loader(filenames=images_np_filenames[train_set_indices],
+                                     mask_dir=args.masks_dir,
+                                     dataset=args.model,
+                                     shuffle=False,
+                                     transform=train_transform,
+                                     mode='train',
+                                     batch_size=args.batch_size,
+                                     limit=args.limit)
+
+    valid_loader = utils.make_loader(filenames=images_np_filenames[val_set_indices],
+                                     mask_dir=args.masks_dir,
+                                     dataset=args.model,
+                                     shuffle=False,
+                                     transform=val_transform,
+                                     mode='val',
+                                     batch_size=args.batch_size,
+                                     limit=args.limit)
+
+    dataloaders = {
+        'train': train_loader, 'val': valid_loader
+    }
+
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.1)
+
+    name_file = '_' + str(int(args.val_percent * 100)) + '_percent_' + args.model
+
+    utils.train_model(name_file=name_file,
+                      model=model,
+                      optimizer=optimizer,
+                      scheduler=scheduler,
+                      dataloaders=dataloaders,
+                      name_model="Unet11",
+                      num_epochs=args.n_epochs)
+
+    torch.save(model.module.state_dict(),
+               (str(args.out_path) + '/model{}_{}_{}epochs').format(name_file, "Unet11", args.n_epochs))
+
+    find_metrics(train_file_names=images_np_filenames[train_set_indices],
+                 val_file_names=images_np_filenames[val_set_indices],
+                 test_file_names=images_np_filenames[test_set_indices],
+                 mask_dir=args.masks_dir,
+                 dataset=args.model,
+                 mean_values=mean_train,
+                 std_values=std_train,
+                 model=model,
+                 name_model="Unet11",
+                 epochs=args.n_epochs,
+                 out_file=args.dataset_file,
+                 dataset_file=args.dataset_file,
+                 name_file=name_file)
 
 
 if __name__ == "__main__":

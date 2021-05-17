@@ -6,36 +6,40 @@ import pickle
 from torch.utils.data.dataset import Dataset
 
 
-class AOI_11_Rotterdam_Dataset(Dataset):
-    def __init__(self, img_path, mask_path, img_names: list, mask_names: list,
-                 transform=None, mode='train', limit=None):
-        self.img_path = img_path
-        self.mask_path = mask_path
-        self.img_names = img_names
-        self.mask_names = mask_names
+class PeruSat1SegmentationDataset(Dataset):
+    def __init__(self, filenames, mask_dir, transform=None, mode='train', limit=None):
+        self.filenames = filenames
+        self.mask_dir = mask_dir
         self.transform = transform
         self.mode = mode
         self.limit = limit
 
     def __len__(self):
-        return len(self.img_path)
+        return len(self.filenames) if self.limit is None else self.limit
 
     def __getitem__(self, idx):
-        img_file_name = os.path.join(self.img_path, self.img_names[idx])
-        mask_file_name = os.path.join(self.mask_path, self.mask_names[idx])
 
-        img = load_image(img_file_name)
+        if self.limit is None:
+            filename = self.filenames[idx]
+        else:
+            filename = np.random.choice(self.filenames)
+
+        basename = filename[filename.rfind("/") + 1:]
+        mask_filename = os.path.join(self.mask_dir, basename)
+
+        img = load_image(filename)
 
         if self.mode == 'train':
-            mask = load_mask(mask_file_name)
+            mask = load_mask(mask_filename)
             img, mask = self.transform(img, mask)
 
             return to_float_tensor(img), torch.from_numpy(np.expand_dims(mask, 0)).float()
+
         else:
             mask = np.zeros(img.shape[:2])
             img, mask = self.transform(img, mask)
 
-            return to_float_tensor(img), str(img_file_name)
+            return to_float_tensor(img), str(filename)
 
 
 def to_float_tensor(img):
