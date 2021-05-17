@@ -83,14 +83,14 @@ def find_metrics(train_file_names, val_file_names, test_file_names, mask_dir, da
                                    dataset=dataset,
                                    shuffle=False,
                                    transform=all_transform,
-                                   mode='val')
+                                   mode='train')
 
     test_loader = utils.make_loader(filenames=test_file_names,
                                     mask_dir=mask_dir,
                                     dataset=dataset,
                                     shuffle=False,
                                     transform=all_transform,
-                                    mode='test')
+                                    mode='train')
 
     dataloaders = {
         'train': train_loader, 'val': val_loader, 'test': test_loader}

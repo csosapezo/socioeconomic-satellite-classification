@@ -96,7 +96,7 @@ def train():
                                      dataset=args.model,
                                      shuffle=False,
                                      transform=val_transform,
-                                     mode='val',
+                                     mode='train',
                                      batch_size=args.batch_size,
                                      limit=args.limit)
 
