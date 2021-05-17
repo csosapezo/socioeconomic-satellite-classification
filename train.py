@@ -82,7 +82,7 @@ def train():
         ImageOnly(Normalize(mean=mean_train, std=std_train))
     ])
 
-    train_loader = utils.make_loader(filenames=images_np_filenames[train_set_indices],
+    train_loader = utils.make_loader(filenames=np.array(images_np_filenames)[train_set_indices],
                                      mask_dir=args.masks_dir,
                                      dataset=args.model,
                                      shuffle=False,
@@ -91,7 +91,7 @@ def train():
                                      batch_size=args.batch_size,
                                      limit=args.limit)
 
-    valid_loader = utils.make_loader(filenames=images_np_filenames[val_set_indices],
+    valid_loader = utils.make_loader(filenames=np.array(images_np_filenames)[val_set_indices],
                                      mask_dir=args.masks_dir,
                                      dataset=args.model,
                                      shuffle=False,
@@ -120,9 +120,9 @@ def train():
     torch.save(model.module.state_dict(),
                (str(args.out_path) + '/model{}_{}_{}epochs').format(name_file, "Unet11", args.n_epochs))
 
-    find_metrics(train_file_names=images_np_filenames[train_set_indices],
-                 val_file_names=images_np_filenames[val_set_indices],
-                 test_file_names=images_np_filenames[test_set_indices],
+    find_metrics(train_file_names=np.array(images_np_filenames)[train_set_indices],
+                 val_file_names=np.array(images_np_filenames)[val_set_indices],
+                 test_file_names=np.array(images_np_filenames)[test_set_indices],
                  mask_dir=args.masks_dir,
                  dataset=args.model,
                  mean_values=mean_train,
