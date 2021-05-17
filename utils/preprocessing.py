@@ -169,7 +169,8 @@ def fill_zeros(image_file_names, output_path, mean):
             raster[3][:][raster[0][:] == 0] = mean[3]
 
             dot = name.rfind(".")
-            np_name = str(os.path.join(output_path, name[:dot] + ".npy"))
+            slash = name.rfind("/") + 1
+            np_name = str(os.path.join(output_path, name[slash:dot] + ".npy"))
             np_image_names.append(np_name)
 
             pickle.dump(raster, open(np_name, "wb"))
