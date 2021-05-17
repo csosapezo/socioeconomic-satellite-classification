@@ -133,3 +133,6 @@ dmypy.json
 
 # Dataset
 data/
+
+# Models
+trained_models/
