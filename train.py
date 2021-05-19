@@ -1,5 +1,6 @@
 import argparse
 import glob
+import os
 
 import torch
 from torch.backends import cudnn
@@ -70,7 +71,14 @@ def train():
 
     max_value, mean_train, std_train = utils.meanstd(args.image_patches_dir)
 
-    images_np_filenames = utils.save_npy(images_filenames, args.npy_dir)
+    if args.model == "income":
+        max_mask, mean_mask, std_mask = utils.meanstd(str(os.path.join(args.masks_dir, "roof")), channel_num=1)
+
+        max_value = np.concatenate((max_value, max_mask))
+        mean_train = np.concatenate((mean_train, mean_mask))
+        std_train = np.concatenate((std_train, std_mask))
+
+    images_np_filenames = utils.save_npy(images_filenames, args.npy_dir, args.model, args.masks_dir)
 
     train_transform = DualCompose([
         CenterCrop(utils.constants.height),
@@ -122,6 +130,9 @@ def train():
                       dataloaders=dataloaders,
                       name_model="Unet11",
                       num_epochs=args.n_epochs)
+
+    if not os.path.exists(args.out_path):
+        os.mkdir(args.out_path)
 
     torch.save(model.module.state_dict(),
                (str(args.out_path) + '/model{}_{}_{}epochs').format(name_file, "Unet11", args.n_epochs))

@@ -3,6 +3,7 @@ import time
 import torch
 import copy
 from collections import defaultdict
+import matplotlib.pyplot as plt
 
 from utils.metrics_prediction import calc_loss, print_metrics
 
@@ -14,8 +15,26 @@ else:
     print('CUDA is available!  Training on GPU ...')
 
 
+def plot_loss(train_loss, val_loss, name, out_dir):
+
+    plt.plot(train_loss, list(range(1, len(train_loss) + 1)), label="Entrenamiento")
+    plt.plot(val_loss, list(range(1, len(val_loss) + 1)), label="Validación")
+
+    plt.xlabel('Épocas')
+    plt.ylabel('Loss')
+
+    plt.title('Función {}'.format(name))
+    plt.legend()
+
+    plt.savefig(out_dir)
+
+
 def train_model(name_file, model, dataset, optimizer, scheduler, dataloaders, name_model='UNet11', num_epochs=25):
-    hist_lst = []
+    loss_history = []
+    jaccard_loss_history = []
+    loss_history_val = []
+    jaccard_loss_history_val = []
+
     best_model_wts = copy.deepcopy(model.state_dict())
     best_loss = 1e10
 
@@ -68,6 +87,13 @@ def train_model(name_file, model, dataset, optimizer, scheduler, dataloaders, na
             print_metrics(metrics, f, phase, epoch_samples)
             epoch_loss = metrics['loss'] / epoch_samples
 
+            if phase == 'train':
+                loss_history.append(epoch_loss)
+                jaccard_loss_history.append(metrics['jaccard_loss'] / epoch_samples)
+            elif phase == 'val':
+                loss_history_val.append(epoch_loss)
+                jaccard_loss_history_val.append(metrics['jaccard_loss'] / epoch_samples)
+
             # deep copy the model
             if phase == 'val' and epoch_loss < best_loss:
                 print("saving best model")
@@ -81,6 +107,16 @@ def train_model(name_file, model, dataset, optimizer, scheduler, dataloaders, na
     print('Best val loss: {:4f}'.format(best_loss))
     f.write('Best val loss: {:4f}'.format(best_loss) + "\n")
     f.close()
+
+    plot_loss(loss_history,
+              loss_history_val,
+              "Loss",
+              "history/history_model{}_{}_{}epochs_loss_chart.png".format(name_file, name_model, num_epochs))
+
+    plot_loss(jaccard_loss_history,
+              jaccard_loss_history_val,
+              "Jaccard Loss",
+              "history/history_model{}_{}_{}epochs_jaccard_loss_chart.png".format(name_file, name_model, num_epochs))
 
     model.load_state_dict(best_model_wts)
     return model

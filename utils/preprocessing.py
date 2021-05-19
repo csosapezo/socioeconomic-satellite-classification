@@ -186,7 +186,7 @@ def meanstd(root, rootdata='data_VHR', channel_num='4'):  # name_file,
     return maximo_pixel_all, mean_all, std_all
 
 
-def save_npy(image_file_names, output_path):
+def save_npy(image_file_names, output_path, model, masks_dir):
     np_image_names = []
 
     if not os.path.exists(output_path):
@@ -198,6 +198,12 @@ def save_npy(image_file_names, output_path):
 
             dot = name.rfind(".")
             slash = name.rfind("/") + 1
+
+            if model == "income":
+                roof = pickle.load(open(os.path.join(masks_dir, "roof", name[slash:dot] + ".npy"), "rb"))
+                roof = np.float32(roof)
+                raster = np.concatenate((raster, np.expand_dims(roof, 0)))
+
             np_name = str(os.path.join(output_path, name[slash:dot] + ".npy"))
             np_image_names.append(np_name)
 
