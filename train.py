@@ -142,8 +142,8 @@ def train():
                  model=model,
                  name_model="Unet11",
                  epochs=args.n_epochs,
-                 out_file=args.dataset_file,
-                 dataset_file=args.dataset_file,
+                 out_file=args.model,
+                 dataset_file=args.model,
                  name_file=name_file)
 
 
