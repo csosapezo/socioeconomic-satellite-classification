@@ -69,16 +69,11 @@ def train():
                                                                                       args.val_percent,
                                                                                       args.test_percent)
 
-    max_value, mean_train, std_train = utils.meanstd(args.image_patches_dir)
-
-    if args.model == "income":
-        max_mask, mean_mask, std_mask = utils.meanstd(str(os.path.join(args.masks_dir, "roof")), channel_num=1)
-
-        max_value = np.concatenate((max_value, max_mask))
-        mean_train = np.concatenate((mean_train, mean_mask))
-        std_train = np.concatenate((std_train, std_mask))
-
     images_np_filenames = utils.save_npy(images_filenames, args.npy_dir, args.model, args.masks_dir)
+
+    channel_num = 4 if args.model == "roof" else 5
+    max_value, mean_train, std_train = utils.meanstd(np.array(images_np_filenames)[train_set_indices],
+                                                     channel_num=channel_num)
 
     train_transform = DualCompose([
         CenterCrop(utils.constants.height),
