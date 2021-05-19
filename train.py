@@ -28,8 +28,8 @@ def train():
     arg('--train-dir', type=str, default='./data/train/', help='train sample directory')
 
     # preprocessing-related variables
-    arg('--val-percent', type=int, default=0.25, help='Validation percent')
-    arg('--test-percent', type=int, default=0.10, help='Test percent')
+    arg('--val-percent', type=float, default=0.25, help='Validation percent')
+    arg('--test-percent', type=float, default=0.10, help='Test percent')
 
     # training-related variable
     arg('--batch-size', type=int, default=16, help='HR:4,VHR:8')
