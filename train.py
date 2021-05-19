@@ -113,7 +113,7 @@ def train():
     }
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.1)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=60, gamma=0.1)
 
     name_file = '_' + str(int(args.val_percent * 100)) + '_percent_' + args.model
 

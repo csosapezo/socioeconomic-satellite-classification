@@ -17,8 +17,8 @@ else:
 
 def plot_loss(train_loss, val_loss, name, out_dir):
 
-    plt.plot(train_loss, list(range(1, len(train_loss) + 1)), label="Entrenamiento")
-    plt.plot(val_loss, list(range(1, len(val_loss) + 1)), label="Validación")
+    plt.plot(list(range(1, len(train_loss) + 1)), train_loss, label="Entrenamiento")
+    plt.plot(list(range(1, len(val_loss) + 1)), val_loss, label="Validación")
 
     plt.xlabel('Épocas')
     plt.ylabel('Loss')
@@ -27,6 +27,7 @@ def plot_loss(train_loss, val_loss, name, out_dir):
     plt.legend()
 
     plt.savefig(out_dir)
+    plt.clf()
 
 
 def train_model(name_file, model, dataset, optimizer, scheduler, dataloaders, name_model='UNet11', num_epochs=25):
