@@ -15,8 +15,6 @@ class PeruSat1SegmentationDataset(Dataset):
         self.mode = mode
         self.limit = limit
 
-        print(self.transform)
-
     def __len__(self):
         return len(self.filenames) if self.limit is None else self.limit
 
