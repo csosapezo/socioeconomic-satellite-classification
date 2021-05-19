@@ -122,13 +122,22 @@ def find_max(im_pths):
 
 def cal_dir_stat(im_pths, max_value, channel_num):
     pixel_num = 0
+    aux = None
     channel_sum = np.zeros(channel_num)
     channel_sum_squared = np.zeros(channel_num)
 
     for path in im_pths:
-        im = pickle.load(open(path, "rb")).transpose((1, 2, 0))  #
-        # print(np.shape(im))
+        im = pickle.load(open(path, "rb"))
+
+        if channel_num != 4:
+            aux = im[:][-1]
+
         im = im / max_value
+
+        if channel_num != 4:
+            im[-1] = aux
+
+        im = im.transpose((1, 2, 0))
         pixel_num += (im.size / channel_num)
         channel_sum += np.sum(im, axis=(0, 1))
         channel_sum_squared += np.sum(np.square(im), axis=(0, 1))
