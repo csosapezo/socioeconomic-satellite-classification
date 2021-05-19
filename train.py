@@ -70,7 +70,7 @@ def train():
 
     max_value, mean_train, std_train = utils.meanstd(args.image_patches_dir)
 
-    images_np_filenames = utils.fill_zeros(images_filenames, args.npy_dir, mean_train)
+    images_np_filenames = utils.save_npy(images_filenames, args.npy_dir, mean_train)
 
     train_transform = DualCompose([
         CenterCrop(utils.constants.height),

@@ -186,7 +186,7 @@ def meanstd(root, rootdata='data_VHR', channel_num='4'):  # name_file,
     return maximo_pixel_all, mean_all, std_all
 
 
-def fill_zeros(image_file_names, output_path, mean):
+def save_npy(image_file_names, output_path):
     np_image_names = []
 
     if not os.path.exists(output_path):
@@ -195,11 +195,6 @@ def fill_zeros(image_file_names, output_path, mean):
     for name in image_file_names:
         with rasterio.open(name) as dataset:
             raster = dataset.read()
-
-            raster[0][:][raster[0][:] == 0] = mean[0]
-            raster[1][:][raster[0][:] == 0] = mean[1]
-            raster[2][:][raster[0][:] == 0] = mean[2]
-            raster[3][:][raster[0][:] == 0] = mean[3]
 
             dot = name.rfind(".")
             slash = name.rfind("/") + 1

@@ -52,7 +52,7 @@ def main():
 
     max_value, mean_train, std_train = utils.mean_std(args.images_path, image_file_names)
 
-    np_file_names = utils.fill_zeros(args.images_path, image_file_names, args.numpy_images_path, mean_train)
+    np_file_names = utils.save_npy(args.images_path, image_file_names, args.numpy_images_path, mean_train)
     np_file_names.sort()
 
     print(f"Max value: {max_value}")
