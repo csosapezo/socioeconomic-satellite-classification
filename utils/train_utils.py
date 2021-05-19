@@ -14,7 +14,7 @@ else:
     print('CUDA is available!  Training on GPU ...')
 
 
-def train_model(name_file, model, optimizer, scheduler, dataloaders, name_model='UNet11', num_epochs=25):
+def train_model(name_file, model, dataset, optimizer, scheduler, dataloaders, name_model='UNet11', num_epochs=25):
     hist_lst = []
     best_model_wts = copy.deepcopy(model.state_dict())
     best_loss = 1e10
@@ -56,7 +56,7 @@ def train_model(name_file, model, optimizer, scheduler, dataloaders, name_model=
 
                 with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
-                    loss = calc_loss(outputs, labels, metrics)
+                    loss = calc_loss(outputs, labels, metrics, dataset)
 
                     if phase == 'train':
                         loss.backward()

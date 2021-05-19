@@ -116,6 +116,7 @@ def train():
 
     utils.train_model(name_file=name_file,
                       model=model,
+                      dataset=args.model,
                       optimizer=optimizer,
                       scheduler=scheduler,
                       dataloaders=dataloaders,

@@ -6,14 +6,17 @@ import torch
 import torch.nn.functional as F
 
 import utils
-from utils import make_loader
 from utils.loss import dice_loss, metric_jaccard  # this is loss
 from utils.transform import DualCompose, CenterCrop, ImageOnly, Normalize
 
 
-def calc_loss(pred, target, metrics, phase='train', bce_weight=0.5):
-    bce = F.binary_cross_entropy_with_logits(pred, target)
-    pred = torch.sigmoid(pred)
+def calc_loss(pred, target, metrics, dataset, phase='train', bce_weight=0.5):
+
+    if dataset == "roof":
+        bce = F.binary_cross_entropy_with_logits(pred, target)
+        pred = torch.sigmoid(pred)
+    else:
+        bce = F.binary_cross_entropy(pred, target)
 
     # convering tensor to numpy to remove from the computationl graph
     if phase == 'test':
