@@ -7,9 +7,10 @@ from torch.utils.data.dataset import Dataset
 
 
 class PeruSat1SegmentationDataset(Dataset):
-    def __init__(self, filenames, mask_dir, transform=None, mode='train', limit=None):
+    def __init__(self, filenames, mask_dir, dataset, transform=None, mode='train', limit=None):
         self.filenames = filenames
         self.mask_dir = mask_dir
+        self.dataset = dataset
         self.transform = transform
         self.mode = mode
         self.limit = limit
@@ -32,6 +33,16 @@ class PeruSat1SegmentationDataset(Dataset):
         if self.mode == 'train':
             mask = load_mask(mask_filename)
             img, mask = self.transform(img, mask)
+
+            if self.dataset == "income":
+                slash = filename.rfind("/")
+                roof = load_mask(os.path.join(self.mask_dir, "roof", filename[slash:]))
+                roof[:][roof[:] == 0] = -0.5
+                roof[:][roof[:] == 1] = 0.5
+                roof = np.expand_dims(roof, 0)
+                img = np.concatenate((img, roof))
+
+                return to_float_tensor(img), torch.from_numpy(mask).float()
 
             return to_float_tensor(img), torch.from_numpy(np.expand_dims(mask, 0)).float()
 

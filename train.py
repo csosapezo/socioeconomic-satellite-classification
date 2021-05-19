@@ -37,16 +37,19 @@ def train():
     arg('--lr', type=float, default=1e-3)
     arg('--model', type=str, help='roof: roof segmentation / income: income determination')
     arg('--out-path', type=str, default='./trained_models/', help='model output path')
+    arg('--pretrained', type=int, default=1, help='0: False; 1: True')
 
     # CUDA devices
     arg('--device-ids', type=str, default='0,1', help='For example 0,1 to run on two GPUs')
 
     args = parser.parse_args()
 
+    pretrained = True if args.pretrained else False
+
     if args.model == "roof":
-        model = models.UNet11(pretrained=True)
+        model = models.UNet11(pretrained=pretrained)
     elif args.model == "income":
-        model = models.UNet11(pretrained=True, num_classes=5, input_channels=5)
+        model = models.UNet11(pretrained=pretrained, num_classes=5, input_channels=5)
     else:
         raise ValueError
 
@@ -82,6 +85,8 @@ def train():
         ImageOnly(Normalize(mean=mean_train, std=std_train))
     ])
 
+    limit = args.limit if args.limit > 0 else None
+
     train_loader = utils.make_loader(filenames=np.array(images_np_filenames)[train_set_indices],
                                      mask_dir=args.masks_dir,
                                      dataset=args.model,
@@ -89,7 +94,7 @@ def train():
                                      transform=train_transform,
                                      mode='train',
                                      batch_size=args.batch_size,
-                                     limit=args.limit)
+                                     limit=limit)
 
     valid_loader = utils.make_loader(filenames=np.array(images_np_filenames)[val_set_indices],
                                      mask_dir=args.masks_dir,
@@ -98,7 +103,7 @@ def train():
                                      transform=val_transform,
                                      mode='train',
                                      batch_size=args.batch_size,
-                                     limit=args.limit)
+                                     limit=None)
 
     dataloaders = {
         'train': train_loader, 'val': valid_loader

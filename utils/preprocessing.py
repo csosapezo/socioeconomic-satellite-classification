@@ -1,9 +1,11 @@
 import glob
 import os
+import pickle
+import timeit
+from pathlib import Path
 
 import numpy as np
 import rasterio
-import pickle
 import tifffile
 import torch
 import torchvision.transforms as T
@@ -151,6 +153,37 @@ def mean_std(image_filenames):
     std /= nb_samples
 
     return max_pixel_all, mean.numpy(), std.numpy()
+
+
+def cal_dir_stat(im_pths, max_value, channel_num):
+    pixel_num = 0
+    channel_sum = np.zeros(channel_num)
+    channel_sum_squared = np.zeros(channel_num)
+
+    for path in im_pths:
+        im = np.load(path).transpose((1, 2, 0))  #
+        # print(np.shape(im))
+        im = im / max_value
+        pixel_num += (im.size / channel_num)
+        channel_sum += np.sum(im, axis=(0, 1))
+        channel_sum_squared += np.sum(np.square(im), axis=(0, 1))
+
+    rgb_mean = channel_sum / pixel_num
+    rgb_std = np.sqrt(channel_sum_squared / pixel_num - np.square(rgb_mean))
+
+    return rgb_mean, rgb_std
+
+
+def meanstd(root, rootdata='data_VHR', channel_num='4'):  # name_file,
+    data_path = Path(rootdata)
+
+    minimo_pixel_all, maximo_pixel_all, size_all = find_max(root)
+    mean_all, std_all = cal_dir_stat(root, maximo_pixel_all, channel_num)
+
+    print('All:', str(data_path), size_all, 'min ', np.min(minimo_pixel_all), 'max ', maximo_pixel_all)  # 0-1
+
+    print("mean:{}\nstd:{}".format(mean_all, std_all))
+    return maximo_pixel_all, mean_all, std_all
 
 
 def fill_zeros(image_file_names, output_path, mean):
