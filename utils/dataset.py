@@ -36,13 +36,16 @@ class PeruSat1SegmentationDataset(Dataset):
 
             if self.dataset == "income":
                 slash = filename.rfind("/")
+
                 roof = load_mask(os.path.join(self.mask_dir, "roof", filename[slash:]))
                 roof[:][roof[:] == 0] = -0.5
                 roof[:][roof[:] == 1] = 0.5
                 roof = np.expand_dims(roof, 0)
+
+                img = np.moveaxis(img, -1, 0)
                 img = np.concatenate((img, roof))
 
-                return to_float_tensor(img), torch.from_numpy(mask).float()
+                return torch.from_numpy(img).float(), torch.from_numpy(mask).float()
 
             return to_float_tensor(img), torch.from_numpy(np.expand_dims(mask, 0)).float()
 
