@@ -205,7 +205,7 @@ def preprocess_image(img):
 
 def transform_function():
     """Función de normalización para una imagen satelital."""
-    image_transform = DualCompose([CenterCrop(256), ImageOnly(
-        Normalize(mean=[118.9308, 163.46594, 167.29922, 356.9652],
-                  std=[75.99471, 83.11909, 102.464455, 202.43672]))])
+    image_transform = DualCompose([CenterCrop(512), ImageOnly(
+        Normalize(mean=[0.09444648, 0.08571006, 0.10127277, 0.09419213],
+                  std=[0.03668221, 0.0291096,  0.02894425, 0.03613606]))])
     return image_transform
