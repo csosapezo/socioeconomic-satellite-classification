@@ -20,7 +20,7 @@ def reverse_transform(inp):
     inp = np.clip(inp, 0, 1)
     inp = (inp / inp.max())
     inp = (inp * 255).astype(np.uint8)
-
+    print(" image shape:", inp.shape)
     return inp
 
 
