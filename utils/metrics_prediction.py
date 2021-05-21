@@ -57,6 +57,9 @@ def find_metrics(train_file_names, val_file_names, test_file_names, mask_dir, da
                  name_file='_VHR_60_fake'):
     outfile_path = 'predictions/{}/'.format(out_file)
 
+    if not os.path.exists("predictions/{}".format(out_file)):
+        os.mkdir("predictions/{}".format(out_file))
+
     f = open(
         "predictions/{}/metric{}_{}_foldout{}_foldin{}_{}epochs.txt".format(out_file, name_file, name_model, fold_out,
                                                                             fold_in, epochs), "w+")
