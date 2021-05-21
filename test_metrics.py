@@ -88,15 +88,15 @@ def test_metrics():
         y = pickle.load(open(mask_path, "rb"))
         print("Get mask for sample {}".format(idx))
 
-        fig.add_subplot(args.num_picture, 3, idx)
+        fig.add_subplot(args.num_picture, 3, idx + 1)
         plt.imshow(reverse_transform(image.numpy()))
         print("Add plot for sample input {}".format(idx))
 
-        fig.add_subplot(args.num_picture, 3, idx + 1)
+        fig.add_subplot(args.num_picture, 3, idx + 2)
         plt.imshow(masks_to_colorimg(y))
         print("Add plot for sample mask {}".format(idx))
 
-        fig.add_subplot(args.num_picture, 3, idx + 2)
+        fig.add_subplot(args.num_picture, 3, idx + 3)
         plt.imshow(masks_to_colorimg(pred.numpy()))
         print("Add plot for sample pred {}".format(idx))
 
