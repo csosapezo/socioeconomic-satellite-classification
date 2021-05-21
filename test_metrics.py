@@ -20,6 +20,9 @@ def reverse_transform(inp):
     inp = np.clip(inp, 0, 1)
     inp = (inp / inp.max())
     inp = (inp * 255).astype(np.uint8)
+    inp = inp.transpose(2, 0, 1)
+    inp = inp[:-1]
+    inp = inp.transpose(1, 2, 0)
     print(" image shape:", inp.shape)
     return inp
 
