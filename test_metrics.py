@@ -89,7 +89,7 @@ def test_metrics():
         print("Get mask for sample {}".format(idx))
 
         fig.add_subplot(args.num_picture, 3, idx)
-        plt.imshow(reverse_transform(image))
+        plt.imshow(reverse_transform(image.numpy()))
         print("Add plot for sample input {}".format(idx))
 
         fig.add_subplot(args.num_picture, 3, idx + 1)
@@ -97,7 +97,7 @@ def test_metrics():
         print("Add plot for sample mask {}".format(idx))
 
         fig.add_subplot(args.num_picture, 3, idx + 2)
-        plt.imshow(masks_to_colorimg(pred))
+        plt.imshow(masks_to_colorimg(pred.numpy()))
         print("Add plot for sample pred {}".format(idx))
 
     if not os.path.exists("test"):
@@ -110,3 +110,7 @@ def test_metrics():
                 .format(args.dataset,
                         args.num_picture,
                         modelname))
+
+
+if __name__ == "__main__":
+    test_metrics()
