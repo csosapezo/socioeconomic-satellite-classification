@@ -84,7 +84,7 @@ def test_metrics():
         print("Running model for sample {}".format(idx))
         pred = run_model(image, model)
 
-        mask_path = os.path.join(args.masks_dir, filename[filename.rfind("/") + 1:])
+        mask_path = os.path.join(args.masks_dir, args.dataset, filename[filename.rfind("/") + 1:])
         y = pickle.load(open(mask_path, "rb"))
         print("Get mask for sample {}".format(idx))
 
