@@ -64,7 +64,11 @@ def test_metrics():
 
     args = parser.parse_args()
 
+    modelname = args.model_path[args.model_path.rfind("/") + 1:args.model_path.rfind(".pth")]
+
     model = load_model(args.model_path, UNet11)
+
+    print("Testing {} on {} samples".format(modelname, args.num_picture))
 
     # Select sample pictures
     images_filenames = np.array(sorted(glob.glob(args.npy_dir + "/*.npy")))
@@ -73,22 +77,28 @@ def test_metrics():
     fig = plt.figure(figsize=(10, 10))
 
     for idx, filename in enumerate(sample_filenames):
+        print("Loading sample input {}".format(idx))
         image = pickle.load(open(filename, "rb"))
         image = preprocess_image(image)
 
+        print("Running model for sample {}".format(idx))
         pred = run_model(image, model)
 
         mask_path = os.path.join(args.masks_dir, image[image.rfind("/") + 1:])
         y = pickle.load(open(mask_path, "rb"))
+        print("Get mask for sample {}".format(idx))
 
         fig.add_subplot(args.num_picture, 3, idx)
         plt.imshow(reverse_transform(image))
+        print("Add plot for sample input {}".format(idx))
 
         fig.add_subplot(args.num_picture, 3, idx + 1)
         plt.imshow(masks_to_colorimg(y))
+        print("Add plot for sample mask {}".format(idx))
 
         fig.add_subplot(args.num_picture, 3, idx + 2)
         plt.imshow(masks_to_colorimg(pred))
+        print("Add plot for sample pred {}".format(idx))
 
     if not os.path.exists("test"):
         os.mkdir("test")
@@ -99,4 +109,4 @@ def test_metrics():
     plt.savefig("test/{}/test_{}_samples_{}.png"
                 .format(args.dataset,
                         args.num_picture,
-                        args.model_path[args.model_path.rfind("/") + 1:args.model_path.rfind(".pth")]))
+                        modelname))
