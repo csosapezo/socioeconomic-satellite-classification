@@ -12,6 +12,7 @@ from utils.model_utils import load_model, run_model
 
 
 def reverse_transform(inp):
+    print(" image shape:", inp.shape)
     inp = inp.transpose(1, 2, 0)
     mean = np.array([0.09444648, 0.08571006, 0.10127277, 0.09419213])
     std = np.array([0.03668221, 0.0291096, 0.02894425, 0.03613606])
@@ -24,6 +25,7 @@ def reverse_transform(inp):
 
 
 def masks_to_colorimg(mask):
+    print("mask shape:", mask.shape)
     image = np.zeros(shape=[3, 512, 512])
 
     image[0] = mask[:] * 255
@@ -37,7 +39,7 @@ def masks_to_colorimg(mask):
 
 
 def pred_to_colorimg(mask):
-
+    print("pred shape:", mask.shape)
     mask = mask[0]
     for x in range(512):
         for y in range(512):
