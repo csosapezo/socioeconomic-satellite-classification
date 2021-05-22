@@ -47,3 +47,6 @@ def convert_to_png():
 
         convert_raster_to_png(filename, args.max_pixel_value, args.png_patches_dir)
 
+
+if __name__ == "__main__":
+    convert_to_png()
