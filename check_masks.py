@@ -41,11 +41,11 @@ def check_masks():
         y = pickle.load(open(mask_path, "rb"))
         print("Get mask for {}".format(filename))
 
-        fig.add_subplot(args.num_picture, 3, 1)
+        fig.add_subplot(1, 2, 1)
         plt.imshow(reverse_transform(image.cpu().numpy()[0]))
         print("Add plot for {}".format(filename))
 
-        fig.add_subplot(args.num_picture, 3, 2)
+        fig.add_subplot(1, 2, 2)
         plt.imshow(masks_to_colorimg(y))
         print("Add plot for mask {}".format(filename))
 
