@@ -26,8 +26,8 @@ def check_masks():
     # Select sample pictures
     images_filenames = np.array(sorted(glob.glob(args.npy_dir + "/*.npy")))
 
-    if not os.path.exists("/data/dataset/patch_plus_mask"):
-        os.mkdir("/data/dataset/patch_plus_mask")
+    if not os.path.exists("data/dataset/patch_plus_mask"):
+        os.mkdir("data/dataset/patch_plus_mask")
 
     for filename in images_filenames:
 
