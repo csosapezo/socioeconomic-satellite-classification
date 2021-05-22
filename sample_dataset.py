@@ -6,7 +6,7 @@ split_dir = "./data/dataset/old_split"
 new_dir = "./data/dataset/split"
 aux_dir = '.data/dataset/old_split2'
 
-with open('new_subdata_2.csv', newline='') as f:
+with open('new_subdata_3.csv', newline='') as f:
     reader = list(csv.reader(f))
     sample = [x[0] for x in reader]
 
