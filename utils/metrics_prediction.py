@@ -73,7 +73,7 @@ def find_metrics(train_file_names, val_file_names, test_file_names, mask_dir, da
     print(len(test_file_names))
 
     all_transform = DualCompose([
-        CenterCrop(int(dataset_file)),
+        CenterCrop(int(512)),
         ImageOnly(Normalize(mean=mean_values, std=std_values))
     ])
 
