@@ -4,9 +4,9 @@ import shutil
 
 split_dir = "./data/dataset/split"
 new_dir = "./data/dataset/split2"
-aux_dir = '.data/dataset/old_split'
+aux_dir = '.data/dataset/old_split2'
 
-with open('subdata.csv', newline='') as f:
+with open('new_subdata.csv', newline='') as f:
     reader = list(csv.reader(f))
     sample = [x[0] for x in reader]
 
