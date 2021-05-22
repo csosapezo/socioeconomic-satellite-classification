@@ -16,7 +16,7 @@ def convert_raster_to_png(filename, max_value, out_path):
     dataset = rasterio.open(filename)
     raster = dataset.read()
 
-    new_metadata = raster.profile
+    new_metadata = dataset.profile
     new_metadata['count'] = 3
     new_metadata['driver'] = 'PNG'
     new_metadata['dtype'] = 'uint8'
