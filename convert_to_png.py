@@ -4,6 +4,7 @@ import os
 
 import numpy as np
 import rasterio
+from tqdm import tqdm
 
 
 def convert_raster_to_png(filename, max_value, out_path):
@@ -42,7 +43,7 @@ def convert_to_png():
     if not os.path.exists(args.png_patches_dir):
         os.mkdir(args.png_patches_dir)
 
-    for filename in images_filenames:
+    for filename in tqdm(images_filenames):
 
         convert_raster_to_png(filename, args.max_pixel_value, args.png_patches_dir)
 
