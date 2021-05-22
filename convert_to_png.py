@@ -14,7 +14,7 @@ def convert_raster_to_png(filename, max_value, out_path):
     basename = filename[filename.rfind("/") + 1:]
 
     dataset = rasterio.open(filename)
-    raster = dataset.open()
+    raster = dataset.read()
 
     new_metadata = raster.profile
     new_metadata['count'] = 3
