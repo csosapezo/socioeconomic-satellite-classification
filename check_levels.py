@@ -29,7 +29,7 @@ def check_levels():
 
         for idx, level in enumerate(mask):
             print("min:", level.min(), "| max:", level.max())
-            print(np.isnan(level))
+            print(np.isnan(level.max()))
             num_layers_per_level[idx] += level.max()
 
     print("Imager per layer:")
