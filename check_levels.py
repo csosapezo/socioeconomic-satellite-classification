@@ -22,14 +22,20 @@ def check_levels():
     income_masks_filenames = \
         [os.path.join(args.masks_dir, filename[filename.rfind("/") + 1:]) for filename in images_filenames]
 
-    num_layers_per_level = np.zeros(5)
+    num_layers_per_level = np.zeros(5).astype(int)
 
     for filename in income_masks_filenames:
         mask = pickle.load(open(filename, "rb"))
-        mask = mask.astype(int)
 
         for idx, level in enumerate(mask):
-            num_layers_per_level[idx] += level.max()
+            if not np.isnan(level.max()):
+                num_layers_per_level[idx] += int(level.max())
+            else:
+                level = np.zeros(level.shape)
+
+        mask = mask.astype(int)
+
+        pickle.dump(mask, open(filename, "wb"))
 
     print("Imager per layer:")
 
