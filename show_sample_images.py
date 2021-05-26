@@ -52,7 +52,7 @@ def pred_to_colorimg(mask):
     return image
 
 
-def test_metrics():
+def show_sample_images():
     parser = argparse.ArgumentParser()
     arg = parser.add_argument
 
@@ -118,4 +118,4 @@ def test_metrics():
 
 
 if __name__ == "__main__":
-    test_metrics()
+    show_sample_images()
