@@ -8,7 +8,7 @@ import numpy as np
 level_indices = [3, 2, 1, 4, 5]
 
 
-def show_sample_images():
+def check_levels():
     parser = argparse.ArgumentParser()
     arg = parser.add_argument
 
@@ -34,3 +34,7 @@ def show_sample_images():
 
     for idx, level in enumerate(num_layers_per_level):
         print("Level {}: {}".format(level_indices[idx], level))
+
+
+if __name__ == "__main__":
+    check_levels()
