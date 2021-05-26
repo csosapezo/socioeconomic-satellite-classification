@@ -26,10 +26,9 @@ def check_levels():
 
     for filename in income_masks_filenames:
         mask = pickle.load(open(filename, "rb"))
+        mask = mask.astype(int)
 
         for idx, level in enumerate(mask):
-            print("min:", level.min(), "| max:", level.max())
-            print(np.isnan(level.max()))
             num_layers_per_level[idx] += level.max()
 
     print("Imager per layer:")
