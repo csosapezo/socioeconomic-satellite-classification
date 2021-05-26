@@ -29,7 +29,7 @@ def check_levels():
 
         for idx, level in enumerate(mask):
             if not np.isnan(level.max()):
-                print(level.min())
+                print(level.max())
                 num_layers_per_level[idx] += int(level.max())
             else:
                 level = np.zeros(level.shape)
