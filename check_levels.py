@@ -28,6 +28,7 @@ def check_levels():
         mask = pickle.load(open(filename, "rb"))
 
         for idx, level in enumerate(mask):
+            print("Max level {}:".format(level_indices[idx]), level.max())
             num_layers_per_level[idx] += level.max()
 
     print("Imager per layer:")
