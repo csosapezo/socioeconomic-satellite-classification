@@ -28,7 +28,7 @@ def check_levels():
         mask = pickle.load(open(filename, "rb"))
 
         for idx, level in enumerate(mask):
-            if level.max() is not np.nan:
+            if int(level.max()) is 1:
                 num_layers_per_level[idx] += level.max()
 
     print("Imager per layer:")
