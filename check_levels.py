@@ -29,13 +29,12 @@ def check_levels():
 
         for idx, level in enumerate(mask):
             if not np.isnan(level.max()):
+                print(level.min())
                 num_layers_per_level[idx] += int(level.max())
             else:
                 level = np.zeros(level.shape)
 
         mask = mask.astype(int)
-
-        pickle.dump(mask, open(filename, "wb"))
 
     print("Imager per layer:")
 
