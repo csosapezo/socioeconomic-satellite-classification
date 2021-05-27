@@ -85,7 +85,7 @@ class Rotate:
                                  borderMode=cv2.BORDER_REFLECT_101)
             if mask is not None:
                 mask = cv2.warpAffine(mask, mat, (height, width),
-                                      flags=cv2.INTER_LINEAR,
+                                      flags=cv2.INTER_NEAREST,
                                       borderMode=cv2.BORDER_REFLECT_101)
 
         print("Rotate - Mask shape:", mask.shape)
