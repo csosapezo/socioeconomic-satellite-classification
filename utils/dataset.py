@@ -56,5 +56,6 @@ def load_image(path):  # Input:CH,H,W  Output:H,W,CH
 
 def load_mask(path):  # Input:H,W  Output:H,W,CH
     mask = pickle.load(open(path, "rb"))
+    print(path, ": ", mask.shape)
     mask = np.float32(mask)
     return mask
