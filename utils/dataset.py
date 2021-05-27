@@ -32,15 +32,13 @@ class PeruSat1SegmentationDataset(Dataset):
 
         if self.mode == 'train':
             mask = load_mask(mask_filename)
-            # if self.dataset == "income":
-            #    mask = mask.transpose((1, 2, 0))
+            if self.dataset == "income":
+                mask = mask.transpose((1, 2, 0))
 
             img, mask = self.transform(img, mask)
 
-            # if self.dataset == "income":
-
-            print(mask_filename, ": ", to_float_tensor(img).shape)
-            print(mask_filename, ": ", torch.from_numpy(np.expand_dims(mask, 0)).float().shape)
+            if self.dataset == "income":
+                return to_float_tensor(img), to_float_tensor(mask)
 
             return to_float_tensor(img), torch.from_numpy(np.expand_dims(mask, 0)).float()
 

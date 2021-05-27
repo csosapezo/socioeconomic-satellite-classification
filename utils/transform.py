@@ -52,7 +52,6 @@ class HorizontalFlip:
             img = cv2.flip(img, 1)
             if mask is not None:
                 mask = cv2.flip(mask, 1)
-        print("Horizontal Flip - Mask shape:", mask.shape)
         return img, mask
 
 
@@ -65,7 +64,6 @@ class VerticalFlip:
             img = cv2.flip(img, 0)
             if mask is not None:
                 mask = cv2.flip(mask, 0)
-        print("Vertical Flip - Mask shape:", mask.shape)
         return img, mask
 
 
@@ -88,7 +86,6 @@ class Rotate:
                                       flags=cv2.INTER_NEAREST,
                                       borderMode=cv2.BORDER_REFLECT_101)
 
-        print("Rotate - Mask shape:", mask.shape)
         return img, mask
 
 
@@ -128,5 +125,4 @@ class RandomRotate90:
             if mask is not None:
                 mask = np.rot90(mask, factor)
 
-        print("Rotate90 - Mask shape:", mask.shape)
         return img.copy(), mask.copy()
