@@ -76,7 +76,6 @@ def train():
                                                      channel_num=channel_num)
 
     train_transform = DualCompose([
-        CenterCrop(utils.constants.height),
         HorizontalFlip(),
         VerticalFlip(),
         Rotate(),
@@ -84,7 +83,6 @@ def train():
     ])
 
     val_transform = DualCompose([
-        CenterCrop(utils.constants.height),
         ImageOnly(Normalize(mean=mean_train, std=std_train))
     ])
 
