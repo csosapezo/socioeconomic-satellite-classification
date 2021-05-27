@@ -43,6 +43,16 @@ def simplify(image_dir, masks_dir, out="./data/dataset/labels/income_simplified"
         pickle.dump(simplified_mask, open(os.path.join(out, filename[filename.rfind("/") + 1:]), "wb"))
 
 
+def check_shape(image_dir, masks_dir):
+    images_filenames = np.array(sorted(glob.glob(image_dir + "/*.npy")))
+    income_masks_filenames = \
+        [os.path.join(masks_dir, filename[filename.rfind("/") + 1:]) for filename in images_filenames]
+
+    for filename in income_masks_filenames:
+        mask = pickle.load(open(filename, "rb"))
+        print("Shape:", mask.shape)
+
+
 def check_levels():
     parser = argparse.ArgumentParser()
     arg = parser.add_argument
@@ -56,7 +66,7 @@ def check_levels():
     args = parser.parse_args()
 
     if args.fix == 1:
-        simplify(args.npy_dir, args.masks_dir)
+        check_shape(args.npy_dir, args.masks_dir)
         return
 
     images_filenames = np.array(sorted(glob.glob(args.npy_dir + "/*.npy")))
