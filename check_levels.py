@@ -50,7 +50,8 @@ def check_shape(image_dir, masks_dir):
 
     for filename in income_masks_filenames:
         mask = pickle.load(open(filename, "rb"))
-        print("Shape:", mask.shape)
+        if mask.shape[0] != 5:
+            print("Shape:", mask.shape)
 
 
 def check_levels():
