@@ -76,9 +76,6 @@ def train_model(name_file, model, dataset, optimizer, scheduler, dataloaders, na
 
                 with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
-                    print("pred", outputs.shape)
-                    print("target", labels.shape)
-                    input()
                     loss = calc_loss(outputs, labels, metrics, dataset)
 
                     if phase == 'train':
