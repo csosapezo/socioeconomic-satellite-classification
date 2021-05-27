@@ -32,8 +32,6 @@ def calc_loss(pred, target, metrics, dataset, phase='train', bce_weight=0.5):
         dice = dice_loss(pred, target)
         jaccard_loss = metric_jaccard(pred, target)
         loss = bce * bce_weight + dice * (1 - bce_weight)
-        print("max/min target:", target.max(), target.min())
-        print("max/min pred:", pred.max(), pred.min())
         metrics['bce'] += bce.data.cpu().numpy() * target.size(0)
         metrics['loss'] += loss.data.cpu().numpy() * target.size(0)
         metrics['dice_loss'] += dice.data.cpu().numpy() * target.size(0)
