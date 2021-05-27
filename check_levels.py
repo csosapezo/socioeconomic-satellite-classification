@@ -41,7 +41,7 @@ def check_levels():
 
     args = parser.parse_args()
 
-    if args.fix != 1:
+    if args.fix == 1:
         fix_masks(args.tif_dir, args.masks_dir)
         return
 
@@ -56,12 +56,7 @@ def check_levels():
 
         for idx, level in enumerate(mask):
             if not np.isnan(level.max()):
-                print(level.max())
                 num_layers_per_level[idx] += int(level.max())
-            else:
-                level = np.zeros(level.shape)
-
-        mask = mask.astype(int)
 
     print("Imager per layer:")
 
