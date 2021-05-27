@@ -29,6 +29,20 @@ def fix_masks(image_dir, masks_dir):
         pickle.dump(mask, open(out_filename, "wb"))
 
 
+def simplify(image_dir, masks_dir, out="./data/dataset/labels/income_simplified"):
+    images_filenames = np.array(sorted(glob.glob(image_dir + "/*.npy")))
+    income_masks_filenames = \
+        [os.path.join(masks_dir, filename[filename.rfind("/") + 1:]) for filename in images_filenames]
+
+    for filename in income_masks_filenames:
+        mask = pickle.load(open(filename, "rb"))
+        simplified_mask = np.zeros((2, mask.shape[1], mask.shape[2]))
+        simplified_mask[0] = mask[levels_dict["1.0"]] + mask[levels_dict["2.0"]] + mask[levels_dict["3.0"]]
+        simplified_mask[1] = mask[levels_dict["4.0"]] + mask[levels_dict["5.0"]]
+
+        pickle.dump(simplified_mask, open(os.path.join(out, filename[filename.rfind("/") + 1:]), "wb"))
+
+
 def check_levels():
     parser = argparse.ArgumentParser()
     arg = parser.add_argument
@@ -42,7 +56,7 @@ def check_levels():
     args = parser.parse_args()
 
     if args.fix == 1:
-        fix_masks(args.tif_dir, args.masks_dir)
+        simplify(args.npy_dir, args.masks_dir)
         return
 
     images_filenames = np.array(sorted(glob.glob(args.npy_dir + "/*.npy")))
