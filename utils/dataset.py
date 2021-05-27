@@ -34,6 +34,8 @@ class PeruSat1SegmentationDataset(Dataset):
             mask = load_mask(mask_filename)
             img, mask = self.transform(img, mask)
 
+            print(mask_filename, ": ", torch.from_numpy(np.expand_dims(mask, 0)).float().shape)
+
             return to_float_tensor(img), torch.from_numpy(np.expand_dims(mask, 0)).float()
 
         else:
@@ -56,6 +58,5 @@ def load_image(path):  # Input:CH,H,W  Output:H,W,CH
 
 def load_mask(path):  # Input:H,W  Output:H,W,CH
     mask = pickle.load(open(path, "rb"))
-    print(path, ": ", mask.shape)
     mask = np.float32(mask)
     return mask
