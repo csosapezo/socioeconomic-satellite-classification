@@ -35,8 +35,9 @@ class PeruSat1SegmentationDataset(Dataset):
             if self.dataset == "income":
                 mask = mask.transpose((1, 2, 0))
 
+            print("Target before transform max/min:", mask.max(), mask.min())
             img, mask = self.transform(img, mask)
-
+            print("Target before transform max/min:", mask.max(), mask.min())
             if self.dataset == "income":
                 return to_float_tensor(img), to_float_tensor(mask)
 
