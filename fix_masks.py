@@ -15,7 +15,7 @@ def fix_masks():
 
     args = parser.parse_args()
 
-    images_filenames = np.array(sorted(glob.glob(args.npy_dir + "/*.tif")))
+    images_filenames = np.array(sorted(glob.glob(args.npy_dir + "/*.npy")))
     masks_dir = [os.path.join(args.masks_dir, filename[filename.rfind("/") + 1:]) for filename in images_filenames]
 
     for filename in masks_dir:
