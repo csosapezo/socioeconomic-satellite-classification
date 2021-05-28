@@ -23,6 +23,7 @@ def fix_masks():
         mask = mask.astype(bool).astype(int)
         assert mask.max() == 1
         assert mask.min() == 0
+        print(filename)
         pickle.dump(mask, open(filename, "wb"))
 
 
