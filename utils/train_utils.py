@@ -70,9 +70,6 @@ def train_model(name_file, model, dataset, optimizer, scheduler, dataloaders, na
             f.write("dataloader:" + str(len(dataloaders[phase])) + "\n")
             for inputs, labels in dataloaders[phase]:
 
-                print("Target after dataloader max/min:", labels.max(), labels.min())
-                input()
-
                 inputs = inputs.to(device)
                 labels = labels.to(device)
 
