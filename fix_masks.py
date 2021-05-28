@@ -24,3 +24,7 @@ def fix_masks():
         assert mask.max() == 1
         assert mask.min() == 0
         pickle.dump(mask, open(filename, "wb"))
+
+
+if __name__ == "__main__":
+    fix_masks()
