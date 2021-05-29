@@ -9,6 +9,8 @@ import utils
 from utils.loss import dice_loss, metric_jaccard  # this is loss
 from utils.transform import DualCompose, CenterCrop, ImageOnly, Normalize
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 
 def calc_loss(pred, target, metrics, dataset, phase='train', bce_weight=0.5):
 
@@ -17,7 +19,7 @@ def calc_loss(pred, target, metrics, dataset, phase='train', bce_weight=0.5):
         pred = torch.sigmoid(pred)
     else:
         nll = torch.nn.NLLLoss2d()
-        nll_loss = nll(pred, torch.tensor(target, dtype=torch.long))
+        nll_loss = nll(pred, torch.tensor(target, dtype=torch.long).to(device))
         pred = torch.exp(pred)
     # convering tensor to numpy to remove from the computationl graph
     if phase == 'test':
