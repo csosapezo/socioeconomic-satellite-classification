@@ -18,32 +18,23 @@ def calc_loss(pred, target, metrics, dataset, phase='train', bce_weight=0.5):
         bce = F.binary_cross_entropy_with_logits(pred, target)
         pred = torch.sigmoid(pred)
     else:
-        nll = torch.nn.NLLLoss2d()
-        nll_loss = nll(pred, torch.tensor(target, dtype=torch.long).to(device))
+        bce = F.binary_cross_entropy_with_logits(pred, target)
         pred = torch.exp(pred)
     # convering tensor to numpy to remove from the computationl graph
     if phase == 'test':
         pred = (pred > 0.50).float()  # with 0.55 is a little better
         dice = dice_loss(pred, target)
         jaccard_loss = metric_jaccard(pred, target)
-        if dataset == "roof":
-            loss = bce * bce_weight + dice * (1 - bce_weight)
-            metrics['bce'] = bce.data.cpu().numpy() * target.size(0)
-        else:
-            loss = nll_loss * bce_weight + dice * (1 - bce_weight)
-            metrics['nllloss'] = nll_loss.data.cpu().numpy() * target.size(0)
+        loss = bce * bce_weight + dice * (1 - bce_weight)
+        metrics['bce'] = bce.data.cpu().numpy() * target.size(0)
         metrics['loss'] = loss.data.cpu().numpy() * target.size(0)
         metrics['dice'] = 1 - dice.data.cpu().numpy() * target.size(0)
         metrics['jaccard'] = 1 - jaccard_loss.data.cpu().numpy() * target.size(0)
     else:
         dice = dice_loss(pred, target)
         jaccard_loss = metric_jaccard(pred, target)
-        if dataset == "roof":
-            loss = bce * bce_weight + dice * (1 - bce_weight)
-            metrics['bce'] = bce.data.cpu().numpy() * target.size(0)
-        else:
-            loss = nll_loss * bce_weight + dice * (1 - bce_weight)
-            metrics['nllloss'] = nll_loss.data.cpu().numpy() * target.size(0)
+        loss = bce * bce_weight + dice * (1 - bce_weight)
+        metrics['bce'] = bce.data.cpu().numpy() * target.size(0)
         metrics['loss'] += loss.data.cpu().numpy() * target.size(0)
         metrics['dice_loss'] += dice.data.cpu().numpy() * target.size(0)
         metrics['jaccard_loss'] += jaccard_loss.data.cpu().numpy() * target.size(0)
