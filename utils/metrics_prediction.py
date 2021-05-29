@@ -17,7 +17,7 @@ def calc_loss(pred, target, metrics, dataset, phase='train', bce_weight=0.5):
         pred = torch.sigmoid(pred)
     else:
         nll = torch.nn.NLLLoss2d()
-        nll_loss = nll(pred, target)
+        nll_loss = nll(pred, torch.tensor(target, dtype=torch.long))
         pred = torch.exp(pred)
     # convering tensor to numpy to remove from the computationl graph
     if phase == 'test':
