@@ -16,7 +16,8 @@ def calc_loss(pred, target, metrics, dataset, phase='train', bce_weight=0.5):
         bce = F.binary_cross_entropy_with_logits(pred, target)
         pred = torch.sigmoid(pred)
     else:
-        nll_loss = torch.nn.NLLLoss2d(pred, target)
+        nll = torch.nn.NLLLoss2d()
+        nll_loss = nll(pred, target)
         pred = torch.exp(pred)
     # convering tensor to numpy to remove from the computationl graph
     if phase == 'test':
