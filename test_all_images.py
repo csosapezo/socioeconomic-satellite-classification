@@ -43,7 +43,7 @@ def test_all_images():
 
     for filename in tqdm(images_filenames):
 
-        fig = plt.figure(figsize=(10, 5))
+        fig = plt.figure(figsize=(10, 10))
 
         image = pickle.load(open(filename, "rb"))
         image = preprocess_image(image, args.dataset)
