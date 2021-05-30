@@ -69,11 +69,12 @@ def masks_to_colorimg(mask, dataset):
 def pred_to_colorimg_roof(mask):
     print("pred shape:", mask.shape)
     mask = mask[0]
+    new_mask = np.zeros(shape=[512, 512])
     for x in range(512):
         for y in range(512):
-            mask[y, x] = int(mask[0, y, x] > 0.5)
+            new_mask[y, x] = int(mask[0, y, x] > 0.5)
 
-    image = masks_to_colorimg_roof(mask)
+    image = masks_to_colorimg_roof(new_mask)
     return image
 
 
