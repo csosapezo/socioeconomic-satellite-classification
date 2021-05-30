@@ -131,7 +131,7 @@ def show_sample_images():
     images_filenames = np.array(sorted(glob.glob(args.npy_dir + "/*.npy")))
     sample_filenames = np.random.choice(images_filenames, args.num_picture)
 
-    fig = plt.figure(figsize=(10, 10))
+    fig = plt.figure(figsize=(10 * args.num_picture, 10))
 
     for idx, filename in enumerate(sample_filenames):
         print("Loading sample input {}".format(idx))
