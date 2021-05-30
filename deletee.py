@@ -15,7 +15,7 @@ for image in images:
 
     unified = mask[0] + mask[1]
 
-    if unified.max() == 1:
+    if unified.max() == 1 and mask.max() == 1:
         continue
 
     fig = plt.figure(figsize=(30, 10))
