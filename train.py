@@ -36,6 +36,7 @@ def train():
     arg('--limit', type=int, default=0, help='number of images in epoch')
     arg('--n-epochs', type=int, default=500)
     arg('--lr', type=float, default=1e-3)
+    arg('--step', type=float, default=60)
     arg('--model', type=str, help='roof: roof segmentation / income: income determination')
     arg('--out-path', type=str, default='./trained_models/', help='model output path')
     arg('--pretrained', type=int, default=1, help='0: False; 1: True')
@@ -111,7 +112,7 @@ def train():
     }
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=60, gamma=0.1)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=args.step, gamma=0.1)
 
     name_file = '_' + str(int(args.val_percent * 100)) + '_percent_' + args.model
 
