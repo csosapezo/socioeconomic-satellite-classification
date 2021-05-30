@@ -12,7 +12,7 @@ from utils.transform import DualCompose, CenterCrop, ImageOnly, Normalize
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def calc_loss(pred, target, metrics, dataset, phase='train', bce_weight=0.01):
+def calc_loss(pred, target, metrics, dataset, phase='train', bce_weight=0.5):
 
     if dataset == "roof":
         bce = F.binary_cross_entropy_with_logits(pred, target)
@@ -25,8 +25,7 @@ def calc_loss(pred, target, metrics, dataset, phase='train', bce_weight=0.01):
         pred = (pred > 0.50).float()  # with 0.55 is a little better
         dice = dice_loss(pred, target)
         jaccard_loss = metric_jaccard(pred, target)
-        # loss = bce * bce_weight + dice * (1 - bce_weight)
-        loss = dice
+        loss = bce * bce_weight + dice * (1 - bce_weight)
         metrics['bce'] = bce.data.cpu().numpy() * target.size(0)
         metrics['loss'] = loss.data.cpu().numpy() * target.size(0)
         metrics['dice'] = 1 - dice.data.cpu().numpy() * target.size(0)
@@ -34,8 +33,7 @@ def calc_loss(pred, target, metrics, dataset, phase='train', bce_weight=0.01):
     else:
         dice = dice_loss(pred, target)
         jaccard_loss = metric_jaccard(pred, target)
-        # loss = bce * bce_weight + dice * (1 - bce_weight)
-        loss = dice
+        loss = bce * bce_weight + dice * (1 - bce_weight)
         metrics['bce'] = bce.data.cpu().numpy() * target.size(0)
         metrics['loss'] += loss.data.cpu().numpy() * target.size(0)
         metrics['dice_loss'] += dice.data.cpu().numpy() * target.size(0)
