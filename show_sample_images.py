@@ -115,7 +115,7 @@ def show_sample_images():
 
     args = parser.parse_args()
 
-    roof_path = "./data/dataset/split"
+    roof_path = "./data/dataset/split_npy"
 
     modelname = args.model_path[args.model_path.rfind("/") + 1:args.model_path.rfind(".pth")]
 
