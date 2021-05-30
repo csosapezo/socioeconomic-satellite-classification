@@ -23,8 +23,6 @@ for image in images:
     print("Capa 1 - min:", mask[0].min(), "max:", mask[0].max())
     print("Capa 2 - min:", mask[1].min(), "max:", mask[1].max())
 
-    mask = mask.astype(bool).astype(int)
-
     if mask[0].min() != 0 and mask[0].max() == 0:
         mask[0] = np.zeros((512, 512)).astype(int)
         pickle.dump(mask, open(image, "wb"))
