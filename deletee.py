@@ -15,10 +15,10 @@ for image in images:
 
     unified = mask[0] + mask[1]
 
-    fig = plt.figure(figsize=(30, 10))
-
     if unified.max() == 1:
         continue
+
+    fig = plt.figure(figsize=(30, 10))
 
     sp1 = fig.add_subplot(1, 3, 1)
     fig.colorbar(plt.imshow(mask[0], vmin=0, vmax=unified.max()))
