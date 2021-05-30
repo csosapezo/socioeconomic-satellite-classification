@@ -79,5 +79,5 @@ for filename in tqdm(images):
 
     plt.clf()
 
-    pickle.dump(income_mask, open(os.path.join(masks_complete_path, output_name_npy)))
-    pickle.dump(simplified_mask, open(os.path.join(masks_simple_path, output_name_npy)))
+    pickle.dump(income_mask, open(os.path.join(masks_complete_path, output_name_npy), "wb"))
+    pickle.dump(simplified_mask, open(os.path.join(masks_simple_path, output_name_npy), "wb"))
