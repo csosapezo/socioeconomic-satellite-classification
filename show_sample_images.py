@@ -12,7 +12,6 @@ from utils.model_utils import load_model, run_model
 
 
 def reverse_transform(inp, dataset):
-    print(" image shape:", inp.shape)
     inp = inp.transpose(1, 2, 0)
     if dataset == "roof":
         mean = np.array([0.09444648, 0.08571006, 0.10127277, 0.09419213])
@@ -27,12 +26,10 @@ def reverse_transform(inp, dataset):
     inp = inp.transpose(2, 0, 1)
     inp = inp[:3]
     inp = inp.transpose(1, 2, 0)
-    print(" image shape:", inp.shape)
     return inp
 
 
 def masks_to_colorimg_roof(mask):
-    print("mask shape:", mask.shape)
     image = np.zeros(shape=[3, 512, 512])
 
     image[0] = mask[:] * 255
@@ -46,7 +43,6 @@ def masks_to_colorimg_roof(mask):
 
 
 def mask_to_colorimg_income(mask):
-    print("mask shape:", mask.shape)
     image = np.zeros(shape=[3, 512, 512])
 
     image[0] = mask[0] * 255
@@ -67,7 +63,6 @@ def masks_to_colorimg(mask, dataset):
 
 
 def pred_to_colorimg_roof(mask):
-    print("pred shape:", mask.shape)
     mask = mask[0]
     new_mask = np.zeros(shape=[512, 512])
     for x in range(512):
@@ -79,7 +74,6 @@ def pred_to_colorimg_roof(mask):
 
 
 def pred_to_colorimg_income(mask):
-    print("pred shape:", mask.shape)
     mask = mask[0]
     for x in range(512):
         for y in range(512):

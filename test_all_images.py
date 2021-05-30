@@ -69,7 +69,7 @@ def test_all_images():
         plt.imshow(pred_to_colorimg(pred.cpu().numpy(), args.dataset))
 
         plt.savefig(os.path.join("./data/test_all",
-                                 filename[filename.rfind("/") + 1:filename[filename.rfind(".")]] + ".png"))
+                                 filename[filename.rfind("/") + 1:filename.rfind(".")] + ".png"))
 
         plt.clf()
         plt.close(fig)
