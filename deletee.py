@@ -1,35 +1,40 @@
+import glob
 import os
+import pickle
 
-masks_complete_path = "./data/dataset/labels/income_complete"
+import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
 masks_simple_path = "./data/dataset/labels/income"
-split_path = './data/dataset/split'
-just_roof = "./data/dataset/split_just_roof"
+outpath = './data/dataset/again_masks_fix_bug'
 
-os.mkdir(just_roof)
+images = glob.glob(masks_simple_path + "/*")
 
-tif = ["IMG_PER1_20190217152904_ORT_P_000659_subtile_14336-7168.tif",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_18432-9216.tif",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_18432-9728.tif",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_19456-5120.tif",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_19968-10752.tif",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_21504-6656.tif",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_21504-7168.tif",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_21504-10752.tif",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_22016-10752.tif"
-       ]
+for image in images:
+    mask = pickle.load(open(image, "rb"))
 
-npy = ["IMG_PER1_20190217152904_ORT_P_000659_subtile_14336-7168.npy",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_18432-9216.npy",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_18432-9728.npy",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_19456-5120.npy",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_19968-10752.npy",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_21504-6656.npy",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_21504-7168.npy",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_21504-10752.npy",
-       "IMG_PER1_20190217152904_ORT_P_000659_subtile_22016-10752.npy"
-       ]
+    unified = mask[0] + mask[1]
 
-for tif_fie, npy_file in zip(tif, npy):
-    os.remove(os.path.join(masks_complete_path, npy_file))
-    os.remove(os.path.join(masks_simple_path, npy_file))
-    os.rename(os.path.join(split_path, tif_fie), os.path.join(just_roof, tif_fie))
+    fig = plt.figure(figsize=(30, 10))
+
+    sp1 = fig.add_subplot(1, 3, 1)
+    plt.imshow(mask[0], vmin=0, vmax=unified.max())
+    divider1 = make_axes_locatable(sp1)
+    cax1 = divider1.append_axes("right", size="5%", pad=0.05)
+    plt.colorbar(sp1, cax=cax1)
+
+    sp2 = fig.add_subplot(1, 3, 2)
+    plt.imshow(mask[1], vmin=0, vmax=unified.max())
+    divider2 = make_axes_locatable(sp2)
+    cax2 = divider2.append_axes("right", size="5%", pad=0.05)
+    plt.colorbar(sp2, cax=cax2)
+
+    sp3 = fig.add_subplot(1, 3, 3)
+    plt.imshow(mask[1], vmin=0, vmax=unified.max())
+    divider3 = make_axes_locatable(sp3)
+    cax3 = divider3.append_axes("right", size="5%", pad=0.05)
+    plt.colorbar(sp3, cax=cax3)
+
+    plt.savefig(os.path.join(outpath, image[image.rfind("/") + 1:]))
+    plt.clf()
+    plt.close()
