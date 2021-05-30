@@ -17,6 +17,9 @@ for image in images:
 
     fig = plt.figure(figsize=(30, 10))
 
+    if unified.max() == 1:
+        continue
+
     sp1 = fig.add_subplot(1, 3, 1)
     fig.colorbar(plt.imshow(mask[0], vmin=0, vmax=unified.max()))
 
@@ -24,7 +27,7 @@ for image in images:
     fig.colorbar(plt.imshow(mask[1], vmin=0, vmax=unified.max()))
 
     sp3 = fig.add_subplot(1, 3, 3)
-    fig.colorbar(plt.imshow(mask[1], vmin=0, vmax=unified.max()))
+    fig.colorbar(plt.imshow(unified, vmin=0, vmax=unified.max()))
 
     plt.savefig(os.path.join(outpath, image[image.rfind("/") + 1:image.rfind(".")] + ".png"))
     plt.clf()
