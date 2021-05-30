@@ -5,6 +5,7 @@ import pickle
 
 import numpy as np
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 
 from models import UNet11
 from show_sample_images import reverse_transform, masks_to_colorimg, pred_to_colorimg
@@ -40,7 +41,7 @@ def test_all_images():
     # Select sample pictures
     images_filenames = np.array(sorted(glob.glob(args.npy_dir + "/*.npy")))
 
-    for filename in images_filenames:
+    for filename in tqdm(images_filenames):
 
         fig = plt.figure(figsize=(10, 30))
 
