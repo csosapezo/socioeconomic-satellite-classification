@@ -4,37 +4,13 @@ from pathlib import Path
 
 import numpy as np
 import rasterio
-import tifffile
 import torch
-import torchvision.transforms as T
 from torch.autograd import Variable
-from torch.utils.data import DataLoader
-from torch.utils.data.dataset import Dataset
 
 from utils.dataset import to_float_tensor
-from utils.transform import DualCompose, CenterCrop, ImageOnly, Normalize
+from utils.transform import DualCompose, ImageOnly, Normalize
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-
-class MeanStdDataset(Dataset):
-    def __init__(self, files, tform=None, imgloader=tifffile.imread):
-        # el contructor, se envia el dataset, trasfor, cargador de imagenes
-        super(MeanStdDataset, self).__init__()
-
-        self.filenames = files
-        self.tform = tform
-        self.imgloader = imgloader
-
-    def __len__(self):
-        return len(self.filenames)
-
-    def __getitem__(self, i):  # retorna la imagen
-        out = self.imgloader(self.filenames[i])
-        out = out.astype(np.float32)  # lo vuelvo float32, int16 da errores
-        if self.tform:
-            out = self.tform(out)
-        return out
 
 
 def train_val_test_split(dataset_size, val_percent, test_percent):
@@ -68,37 +44,6 @@ def train_val_test_split(dataset_size, val_percent, test_percent):
     train_set_indices = indices[train_start:]
 
     return train_set_indices, val_set_indices, test_set_indices
-
-
-def mean_std(image_filenames):
-    """
-    Implementation from Media_Desviacionstd_tifv2
-    """
-    min_pixel_all, max_pixel_all, size_all = find_max(image_filenames)
-
-    doc_train_dataset = MeanStdDataset(files=image_filenames, tform=T.Compose([T.ToTensor()]))
-
-    loader_med_sd = DataLoader(
-        doc_train_dataset,
-        batch_size=128,
-        num_workers=0,
-        shuffle=False
-    )
-
-    mean = 0.
-    std = 0.
-    nb_samples = 0.
-    for data in loader_med_sd:
-        batch_samples = data.size(0)
-        data = data.view(batch_samples, data.size(1), -1)
-        mean += data.mean(2).sum(0)
-        std += data.std(2).sum(0)
-        nb_samples += batch_samples
-
-    mean /= nb_samples
-    std /= nb_samples
-
-    return max_pixel_all, mean.numpy(), std.numpy()
 
 
 def find_max(im_pths):

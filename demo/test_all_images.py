@@ -22,8 +22,8 @@ def test_all_images():
     arg('--dataset', type=str, help='roof: roof segmentation / income: income determination')
 
     # image-related variables
-    arg('--masks-dir', type=str, default='./data/dataset/labels', help='numPy masks directory')
-    arg('--npy-dir', type=str, default='./data/dataset/split_npy', help='numPy preprocessed patches directory')
+    arg('--masks-dir', type=str, default='../data/dataset/labels', help='numPy masks directory')
+    arg('--npy-dir', type=str, default='../data/dataset/split_npy', help='numPy preprocessed patches directory')
 
     args = parser.parse_args()
 

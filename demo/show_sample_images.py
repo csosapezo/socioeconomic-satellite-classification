@@ -108,10 +108,9 @@ def show_sample_images():
     arg('--dataset', type=str, help='roof: roof segmentation / income: income determination')
 
     # image-related variables
-    arg('--image-patches-dir', type=str, default='./data/dataset/split', help='satellite image patches directory')
-    arg('--masks-dir', type=str, default='./data/dataset/labels', help='numPy masks directory')
-    arg('--npy-dir', type=str, default='./data/dataset/split_npy', help='numPy preprocessed patches directory')
-    arg('--train-dir', type=str, default='./data/train/', help='train sample directory')
+    arg('--image-patches-dir', type=str, default='../data/dataset/split', help='satellite image patches directory')
+    arg('--masks-dir', type=str, default='../data/dataset/labels', help='numPy masks directory')
+    arg('--npy-dir', type=str, default='../data/dataset/split_npy', help='numPy preprocessed patches directory')
 
     args = parser.parse_args()
 
@@ -131,7 +130,7 @@ def show_sample_images():
     images_filenames = np.array(sorted(glob.glob(args.npy_dir + "/*.npy")))
     sample_filenames = np.random.choice(images_filenames, args.num_picture)
 
-    fig = plt.figure(figsize=(10, 10 * args.num_picture))
+    fig = plt.figure(figsize=(10, 7.5 * args.num_picture))
 
     for idx, filename in enumerate(sample_filenames):
         print("Loading sample input {}".format(idx))

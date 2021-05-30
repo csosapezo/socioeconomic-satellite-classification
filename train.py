@@ -25,7 +25,6 @@ def train():
     arg('--image-patches-dir', type=str, default='./data/dataset/split', help='satellite image patches directory')
     arg('--masks-dir', type=str, default='./data/dataset/labels', help='numPy masks directory')
     arg('--npy-dir', type=str, default='./data/dataset/split_npy', help='numPy preprocessed patches directory')
-    arg('--train-dir', type=str, default='./data/train/', help='train sample directory')
 
     # preprocessing-related variables
     arg('--val-percent', type=float, default=0.25, help='Validation percent')
