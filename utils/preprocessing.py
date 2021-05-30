@@ -186,7 +186,7 @@ def save_npy(image_file_names, output_path, model, masks_dir):
     return np_image_names
 
 
-def preprocess_image(img):
+def preprocess_image(img, dataset):
     """Normaliza y transforma la imagen en un tensor apto para ser procesado por la red neuronal de segmentación de
     cuerpos de agua.
     Dimensiones: entrada: (4,256,256); salida: (1,4,256,256)
@@ -195,7 +195,7 @@ def preprocess_image(img):
     """
     print(img.shape)
     img = img.transpose((1, 2, 0))
-    image_transform = transform_function()
+    image_transform = transform_function(dataset)
     img_for_model = image_transform(img)[0]
     img_for_model = Variable(to_float_tensor(img_for_model), requires_grad=False)
     img_for_model = img_for_model.unsqueeze(0).to(device)
@@ -203,9 +203,17 @@ def preprocess_image(img):
     return img_for_model
 
 
-def transform_function():
+def transform_function(dataset):
     """Función de normalización para una imagen satelital."""
-    image_transform = DualCompose([CenterCrop(512), ImageOnly(
-        Normalize(mean=[0.09444648, 0.08571006, 0.10127277, 0.09419213],
-                  std=[0.03668221, 0.0291096,  0.02894425, 0.03613606]))])
+    if dataset == "roof":
+        image_transform = DualCompose([ImageOnly(
+            Normalize(mean=[0.09444648, 0.08571006, 0.10127277, 0.09419213],
+                      std=[0.03668221, 0.0291096, 0.02894425, 0.03613606]))])
+    else:
+        image_transform = DualCompose([ImageOnly(
+            Normalize(mean=[0.14308006, 0.12414238, 0.13847679, 0.14984046, 0.61647371],
+                      std=[0.0537779,  0.04049726, 0.03915002, 0.0497247,  0.48624467]))])
     return image_transform
+
+
+
