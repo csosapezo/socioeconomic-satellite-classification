@@ -18,6 +18,8 @@ for image in images:
     if unified.max() == 1 and mask.max() == 1:
         continue
 
+    mask = mask.astype(bool).astype(int)
+
     fig = plt.figure(figsize=(30, 10))
 
     sp1 = fig.add_subplot(1, 3, 1)
