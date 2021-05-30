@@ -142,6 +142,7 @@ def show_sample_images():
         pred = run_model(image, model, args.dataset)
         if args.dataset == "income":
             roof_image = pickle.load(open(os.path.join(roof_path, filename[filename.rfind("/") + 1:])))
+            roof_image = preprocess_image(roof_image, "roof")
             pred_roof = run_model(roof_image, roof_model, "roof")
             pred[0][0] = pred[0][0] * pred_roof[0][0]
             pred[0][1] = pred[0][1] * pred_roof[0][0]
