@@ -115,12 +115,15 @@ def show_sample_images():
 
     args = parser.parse_args()
 
+    roof_path = "./data/dataset/split"
+
     modelname = args.model_path[args.model_path.rfind("/") + 1:args.model_path.rfind(".pth")]
 
     if args.dataset == "roof":
         model = load_model(args.model_path, UNet11)
     else:
         model = load_model(args.model_path, UNet11, input_channels=5, num_classes=2)
+        roof_model = load_model("./data/trained_models/model_10_percent_roof_Unet11_200epochs.pth", UNet11)
 
     print("Testing {} on {} samples".format(modelname, args.num_picture))
 
@@ -137,6 +140,11 @@ def show_sample_images():
 
         print("Running model for sample {}".format(idx))
         pred = run_model(image, model, args.dataset)
+        if args.dataset == "income":
+            roof_image = pickle.load(open(os.path.join(roof_path, filename[filename.rfind("/") + 1:])))
+            pred_roof = run_model(roof_image, roof_model, "roof")
+            pred[0][0] = pred[0][0] * pred_roof[0][0]
+            pred[0][1] = pred[0][1] * pred_roof[0][0]
 
         mask_path = os.path.join(args.masks_dir, args.dataset, filename[filename.rfind("/") + 1:])
         y = pickle.load(open(mask_path, "rb"))
