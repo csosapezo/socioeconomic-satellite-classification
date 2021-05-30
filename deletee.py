@@ -26,6 +26,6 @@ for image in images:
     sp3 = fig.add_subplot(1, 3, 3)
     fig.colorbar(plt.imshow(mask[1], vmin=0, vmax=unified.max()))
 
-    plt.savefig(os.path.join(outpath, image[image.rfind("/") + 1:]))
+    plt.savefig(os.path.join(outpath, image[image.rfind("/") + 1:image.rfind(".")] + ".png"))
     plt.clf()
     plt.close()
