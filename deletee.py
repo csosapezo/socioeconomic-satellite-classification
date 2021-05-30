@@ -3,6 +3,7 @@ import os
 import pickle
 
 import matplotlib.pyplot as plt
+import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 masks_simple_path = "./data/dataset/labels/income"
@@ -23,6 +24,13 @@ for image in images:
     print("Capa 2 - min:", mask[1].min(), "max:", mask[1].max())
 
     mask = mask.astype(bool).astype(int)
+
+    if mask[0].min() != 0 and mask[0].max() == 0:
+        mask[0] = np.zeros((512, 512)).astype(int)
+        pickle.dump(mask, open(image, "wb"))
+    elif mask[1].min() != 0 and mask[1].max() == 0:
+        mask[1] = np.zeros((512, 512)).astype(int)
+        pickle.dump(mask, open(image, "wb"))
 
     # fig = plt.figure(figsize=(30, 10))
 
