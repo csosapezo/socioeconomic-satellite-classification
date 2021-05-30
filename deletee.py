@@ -18,7 +18,9 @@ for image in images:
     if unified.max() == 1 and mask.max() == 1 and mask.min() == 0:
         continue
 
-    print(image, "max:", mask.max(), "unified_max:", unified.max(), "min:", mask.min())
+    print(image, "max:", mask.max(), "unified_max:", unified.max())
+    print("Capa 1 - min:", mask[0].min(), "max:", mask[0].max())
+    print("Capa 2 - min:", mask[1].min(), "max:", mask[1].max())
 
     mask = mask.astype(bool).astype(int)
 
