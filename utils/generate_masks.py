@@ -67,7 +67,7 @@ def get_income_level_segmentation_mask(labels_dict, levels, image_shape, image_t
     mask = np.ndarray((len(levels), image_shape[0], image_shape[1])).astype(int)
 
     for level, labels in labels_dict.items():
-        mask[levels[level]] = geometry_mask(labels, image_shape, image_transform, all_touched=True, invert=True) \
+        mask[levels[level]] = geometry_mask(labels, image_shape, image_transform, all_touched=False, invert=True) \
             if labels else np.zeros(image_shape)
 
     return mask
