@@ -43,10 +43,16 @@ def masks_to_colorimg_roof(mask):
 
 
 def mask_to_colorimg_income(mask):
+    coloring = [(50, 168, 82), (19, 125, 235)]
+
+    # {'3.0': 0, '2.0': 1, '1.0': 2, '4.0': 3, '5.0': 4}
+
     image = np.zeros(shape=[3, 512, 512])
 
-    image[0] = mask[0] * 255
-    image[1] = mask[1] * 255
+    for idx, layer in enumerate(mask):
+        image[0] += layer * coloring[idx][0]
+        image[1] += layer * coloring[idx][1]
+        image[2] += layer * coloring[idx][2]
 
     image = image.transpose((1, 2, 0))
     image = image.astype('uint8')
