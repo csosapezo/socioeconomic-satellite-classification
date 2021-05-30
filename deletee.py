@@ -18,6 +18,8 @@ for image in images:
     if unified.max() == 1 and mask.max() == 1:
         continue
 
+    print(image, "max:", mask.max(), "unified_max:", unified.max())
+
     mask = mask.astype(bool).astype(int)
 
     fig = plt.figure(figsize=(30, 10))
