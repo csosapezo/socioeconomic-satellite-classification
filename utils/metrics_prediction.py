@@ -12,7 +12,7 @@ from utils.transform import DualCompose, CenterCrop, ImageOnly, Normalize
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def calc_loss(pred, target, metrics, dataset, phase='train', bce_weight=0.25):
+def calc_loss(pred, target, metrics, dataset, phase='train', bce_weight=0.01):
 
     if dataset == "roof":
         bce = F.binary_cross_entropy_with_logits(pred, target)
