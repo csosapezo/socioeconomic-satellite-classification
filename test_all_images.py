@@ -53,8 +53,8 @@ def test_all_images():
             roof_image = pickle.load(open(os.path.join(roof_path, filename[filename.rfind("/") + 1:]), "rb"))
             roof_image = preprocess_image(roof_image, "roof")
             pred_roof = run_model(roof_image, roof_model, "roof")
-            pred[0][0] = pred[0][0] * pred_roof[0][0]
-            pred[0][1] = pred[0][1] * pred_roof[0][0]
+            # pred[0][0] = pred[0][0] * pred_roof[0][0]
+            # pred[0][1] = pred[0][1] * pred_roof[0][0]
 
         mask_path = os.path.join(args.masks_dir, args.dataset, filename[filename.rfind("/") + 1:])
         y = pickle.load(open(mask_path, "rb"))
