@@ -122,7 +122,7 @@ def show_sample_images():
         model = load_model(args.model_path, UNet11)
     else:
         model = load_model(args.model_path, UNet11, input_channels=5, num_classes=4)
-        roof_model = load_model("./trained_models/model_10_percent_roof_Unet11_200epochs.pth", UNet11)
+        # roof_model = load_model("./trained_models/model_10_percent_roof_Unet11_200epochs.pth", UNet11)
 
     print("Testing {} on {} samples".format(modelname, args.num_picture))
 
