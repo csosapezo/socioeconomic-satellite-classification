@@ -29,4 +29,4 @@ for filename in tqdm(images):
     income_mask = get_income_level_segmentation_mask(labels_dict, levels,
                                                      (meta['width'], meta['height']), meta['transform'])
 
-    pickle.dump(income_mask, open(os.path.join(masks_complete_path, output_name_npy)))
+    pickle.dump(income_mask, open(os.path.join(masks_complete_path, output_name_npy), "wb"))
