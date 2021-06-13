@@ -43,7 +43,7 @@ def masks_to_colorimg_roof(mask):
 
 
 def mask_to_colorimg_income(mask):
-    coloring = [(50, 168, 82), (19, 125, 235)]
+    coloring = [(50, 168, 82), (19, 125, 235), (207, 224, 72), (0, 0, 0)]
 
     # {'3.0': 0, '2.0': 1, '1.0': 2, '4.0': 3, '5.0': 4}
 
