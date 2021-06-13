@@ -33,9 +33,9 @@ for fn in new_patches:
             print(fn.rfind("/"), layer.min())
             layer[:][layer < 0] = 0
 
-    new_patch[0] = patch[1]
-    new_patch[1] = patch[0]
-    new_patch[2] = patch[3] + patch[4]
+    new_patch[0] = patch[1] + patch[0]
+    new_patch[1] = patch[3]
+    new_patch[2] = patch[4]
 
     if new_patch[2].max() > 1:
         new_patch[2][new_patch > 1] = 1
