@@ -108,9 +108,9 @@ def show_sample_images():
     arg('--dataset', type=str, help='roof: roof segmentation / income: income determination')
 
     # image-related variables
-    arg('--image-patches-dir', type=str, default='../data/dataset/split', help='satellite image patches directory')
-    arg('--masks-dir', type=str, default='../data/dataset/labels', help='numPy masks directory')
-    arg('--npy-dir', type=str, default='../data/dataset/split_npy', help='numPy preprocessed patches directory')
+    arg('--image-patches-dir', type=str, default='./data/dataset/split', help='satellite image patches directory')
+    arg('--masks-dir', type=str, default='./data/dataset/labels', help='numPy masks directory')
+    arg('--npy-dir', type=str, default='./data/dataset/split_npy', help='numPy preprocessed patches directory')
 
     args = parser.parse_args()
 
