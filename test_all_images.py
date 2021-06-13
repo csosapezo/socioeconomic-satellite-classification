@@ -23,7 +23,7 @@ def test_all_images():
 
     # image-related variables
     arg('--masks-dir', type=str, default='./data/dataset/labels', help='numPy masks directory')
-    arg('--npy-dir', type=str, default='./data/dataset/split_npy', help='numPy preprocessed patches directory')
+        arg('--npy-dir', type=str, default='./data/dataset/split_npy', help='numPy preprocessed patches directory')
 
     args = parser.parse_args()
 
@@ -49,9 +49,9 @@ def test_all_images():
         image = preprocess_image(image, args.dataset)
 
         pred = run_model(image, model, args.dataset)
-        if args.dataset == "income":
-            roof_image = pickle.load(open(os.path.join(roof_path, filename[filename.rfind("/") + 1:]), "rb"))
-            roof_image = preprocess_image(roof_image, "roof")
+        # if args.dataset == "income":
+            # roof_image = pickle.load(open(os.path.join(roof_path, filename[filename.rfind("/") + 1:]), "rb"))
+            # roof_image = preprocess_image(roof_image, "roof")
             # pred_roof = run_model(roof_image, roof_model, "roof")
             # pred[0][0] = pred[0][0] * pred_roof[0][0]
             # pred[0][1] = pred[0][1] * pred_roof[0][0]
