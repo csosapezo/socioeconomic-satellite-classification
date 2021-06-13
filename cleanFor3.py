@@ -11,8 +11,8 @@ patches = glob.glob(two_dir + "/*")
 new_patches = []
 
 for filename in patches:
-    if not os.path.exists("/data/dataset/labels/income_new"):
-        os.mkdir("/data/dataset/labels/income_new")
+    if not os.path.exists("./data/dataset/labels/income_new"):
+        os.mkdir("./data/dataset/labels/income_new")
     complete_fn = filename.replace("income", "income_complete")
     os.rename(complete_fn, complete_fn.replace("income_complete", "income_new"))
     new_patches.append(complete_fn.replace("income_complete", "income_new"))
