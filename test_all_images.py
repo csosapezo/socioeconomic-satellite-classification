@@ -52,7 +52,7 @@ def test_all_images():
         if args.dataset == "income":
             roof_image = pickle.load(open(os.path.join(roof_path, filename[filename.rfind("/") + 1:]), "rb"))
             roof_image = preprocess_image(roof_image, "roof")
-            pred_roof = run_model(roof_image, roof_model, "roof")
+            # pred_roof = run_model(roof_image, roof_model, "roof")
             # pred[0][0] = pred[0][0] * pred_roof[0][0]
             # pred[0][1] = pred[0][1] * pred_roof[0][0]
 
