@@ -50,7 +50,7 @@ def train():
     if args.model == "roof":
         model = models.UNet11(pretrained=pretrained)
     elif args.model == "income":
-        model = models.UNet11(pretrained=pretrained, num_classes=2, input_channels=5)
+        model = models.UNet11(pretrained=pretrained, num_classes=4, input_channels=5)
     else:
         raise ValueError
 
