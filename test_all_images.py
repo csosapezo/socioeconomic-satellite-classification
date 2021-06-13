@@ -23,7 +23,7 @@ def test_all_images():
 
     # image-related variables
     arg('--masks-dir', type=str, default='./data/dataset/labels', help='numPy masks directory')
-        arg('--npy-dir', type=str, default='./data/dataset/split_npy', help='numPy preprocessed patches directory')
+    arg('--npy-dir', type=str, default='./data/dataset/split_npy', help='numPy preprocessed patches directory')
 
     args = parser.parse_args()
 
